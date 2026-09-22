@@ -1,10 +1,11 @@
 import raw from "@/data/nutrition.json";
-import type { NutritionItem, Category } from "./types";
+import type { NutritionItem, Category, FoodCardItem } from "./types";
 
 const items = raw as unknown as NutritionItem[];
 const itemBySlug = new Map(items.map((item) => [item.slug, item]));
 const allSlugs = items.map((item) => item.slug);
 const alphabeticalItems = [...items].sort((a, b) => a.name.localeCompare(b.name));
+const alphaIdx = new Map(alphabeticalItems.map((item, i) => [item.slug, i]));
 const itemsByCategory = new Map<Category, NutritionItem[]>();
 const relatedGroupsCache = new Map<string, ReturnType<typeof buildRelatedItemGroups>>();
 const relatedStopWords = new Set(["and", "with", "for", "from", "into", "the", "this", "that", "use", "used"]);
@@ -15,17 +16,41 @@ for (const item of items) {
   itemsByCategory.set(item.category, categoryItems);
 }
 
-const relatedTextTokens = new Map<string, Set<string>>(
-  items.map((item) => [
-    item.slug,
-    new Set(
-      [...item.serving_ideas, item.intro]
-        .join(" ")
-        .toLowerCase()
-        .match(/[a-z0-9]+/g) ?? []
-    ),
-  ])
-);
+// Bounded inverted index for nutrients (max 150 items per nutrient)
+const nutrientToItems = new Map<string, number[]>();
+for (let i = 0; i < items.length; i++) {
+  for (const n of items[i].key_micronutrients) {
+    const key = n.name.toLowerCase();
+    const arr = nutrientToItems.get(key) ?? [];
+    if (arr.length < 150) {
+      arr.push(i);
+      nutrientToItems.set(key, arr);
+    }
+  }
+}
+
+// Bounded inverted index for text tokens (max 50 items per word)
+const wordToItems = new Map<string, number[]>();
+const itemTokensList: string[][] = [];
+
+for (let i = 0; i < items.length; i++) {
+  const item = items[i];
+  const words = (
+    [...item.serving_ideas, item.intro]
+      .join(" ")
+      .toLowerCase()
+      .match(/[a-z0-9]+/g) ?? []
+  ).filter((w) => w.length > 3 && !relatedStopWords.has(w));
+  const unique = [...new Set(words)];
+  itemTokensList.push(unique);
+  for (const word of unique) {
+    const arr = wordToItems.get(word) ?? [];
+    if (arr.length < 50) {
+      arr.push(i);
+      wordToItems.set(word, arr);
+    }
+  }
+}
 
 export const CATEGORY_LABELS: Record<Category, string> = {
   fruit: "Fruits",
@@ -83,6 +108,43 @@ export function getItemsByCategory(category: Category): NutritionItem[] {
   return itemsByCategory.get(category) ?? [];
 }
 
+export function toCardItem(item: NutritionItem): FoodCardItem {
+  return {
+    slug: item.slug,
+    name: item.name,
+    category: item.category,
+    intro: item.intro,
+    per_100g: {
+      calories_kcal: item.per_100g.calories_kcal,
+      protein_g: item.per_100g.protein_g,
+    },
+  };
+}
+
+const cardItems = items.map(toCardItem);
+const cardItemsByCategory = new Map<Category, FoodCardItem[]>();
+for (const card of cardItems) {
+  const arr = cardItemsByCategory.get(card.category) ?? [];
+  arr.push(card);
+  cardItemsByCategory.set(card.category, arr);
+}
+
+export function getAllCardItems(): FoodCardItem[] {
+  return cardItems;
+}
+
+export function getCardItemsByCategory(category: Category): FoodCardItem[] {
+  return cardItemsByCategory.get(category) ?? [];
+}
+
+export function getCardItemsByMetric(
+  metric: HubMetric,
+  category?: Category,
+  limit?: number
+): FoodCardItem[] {
+  return getItemsByMetric(metric, category, limit).map(toCardItem);
+}
+
 export function getRelatedItems(item: NutritionItem, count = 6): NutritionItem[] {
   const groups = getRelatedItemGroups(item, count);
   const candidates = [
@@ -129,10 +191,6 @@ export function getItemsByMetric(
   return typeof limit === "number" ? sorted.slice(0, limit) : sorted;
 }
 
-function sharedTokens(left: Set<string>, right: Set<string>): number {
-  return [...left].filter((word) => word.length > 3 && !relatedStopWords.has(word) && right.has(word)).length;
-}
-
 export function getRelatedItemGroups(item: NutritionItem, count = 6) {
   const cacheKey = `${item.slug}:${count}`;
   const cached = relatedGroupsCache.get(cacheKey);
@@ -144,35 +202,67 @@ export function getRelatedItemGroups(item: NutritionItem, count = 6) {
 }
 
 function buildRelatedItemGroups(item: NutritionItem, count: number) {
-  const others = items.filter((candidate) => candidate.slug !== item.slug);
+  const sameCatLimit = Math.max(4, Math.ceil(count / 2));
+  const microLimit = Math.max(3, Math.ceil(count / 2));
+  const togetherLimit = Math.max(3, Math.ceil(count / 2));
+
+  // 1. Same category by calorie proximity
   const sameCategory = (itemsByCategory.get(item.category) ?? [])
     .filter((candidate) => candidate.slug !== item.slug)
-    .sort((a, b) => Math.abs(a.per_100g.calories_kcal - item.per_100g.calories_kcal) - Math.abs(b.per_100g.calories_kcal - item.per_100g.calories_kcal))
-    .slice(0, Math.max(4, Math.ceil(count / 2)));
-  const nutrientNames = new Set(item.key_micronutrients.map((nutrient) => nutrient.name.toLowerCase()));
-  const sharedMicronutrients = others
-    .map((candidate) => ({
-      candidate,
-      score: candidate.key_micronutrients.filter((nutrient) => nutrientNames.has(nutrient.name.toLowerCase())).length,
-    }))
-    .filter(({ score }) => score > 0)
-    .sort((a, b) => b.score - a.score || a.candidate.name.localeCompare(b.candidate.name))
-    .map(({ candidate }) => candidate)
-    .slice(0, Math.max(3, Math.ceil(count / 2)));
-  const alphabeticalIndex = alphabeticalItems.findIndex((candidate) => candidate.slug === item.slug);
+    .sort(
+      (a, b) =>
+        Math.abs(a.per_100g.calories_kcal - item.per_100g.calories_kcal) -
+        Math.abs(b.per_100g.calories_kcal - item.per_100g.calories_kcal)
+    )
+    .slice(0, sameCatLimit);
+
+  // 2. Shared micronutrients using bounded index
+  const itemIdx = alphaIdx.get(item.slug);
+  const microScores = new Map<number, number>();
+  for (const n of item.key_micronutrients) {
+    const key = n.name.toLowerCase();
+    const candidateIndices = nutrientToItems.get(key);
+    if (candidateIndices) {
+      for (const idx of candidateIndices) {
+        if (items[idx].slug !== item.slug) {
+          microScores.set(idx, (microScores.get(idx) ?? 0) + 1);
+        }
+      }
+    }
+  }
+  const sharedMicronutrients = [...microScores.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, microLimit)
+    .map(([idx]) => items[idx]);
+
+  // 3. Alphabetical neighbours (O(1) lookup via alphaIdx Map)
+  const ai = itemIdx ?? alphabeticalItems.findIndex((c) => c.slug === item.slug);
   const alphabetical = alphabeticalItems
-    .slice(Math.max(0, alphabeticalIndex - 2), alphabeticalIndex + 3)
+    .slice(Math.max(0, ai - 2), ai + 3)
     .filter((candidate) => candidate.slug !== item.slug);
-  const itemTokens = relatedTextTokens.get(item.slug) ?? new Set<string>();
-  const commonlyUsedTogether = others
-    .map((candidate) => ({
-      candidate,
-      score: sharedTokens(itemTokens, relatedTextTokens.get(candidate.slug) ?? new Set<string>()),
-    }))
-    .filter(({ score }) => score > 0)
-    .sort((a, b) => b.score - a.score || a.candidate.name.localeCompare(b.candidate.name))
-    .map(({ candidate }) => candidate)
-    .slice(0, Math.max(3, Math.ceil(count / 2)));
+
+  // 4. Commonly used together using bounded inverted index
+  const tokenScores = new Map<number, number>();
+  const words = (
+    [...item.serving_ideas, item.intro]
+      .join(" ")
+      .toLowerCase()
+      .match(/[a-z0-9]+/g) ?? []
+  ).filter((w) => w.length > 3 && !relatedStopWords.has(w));
+  for (const word of new Set(words)) {
+    const candidateIndices = wordToItems.get(word);
+    if (candidateIndices) {
+      for (const idx of candidateIndices) {
+        if (items[idx].slug !== item.slug) {
+          tokenScores.set(idx, (tokenScores.get(idx) ?? 0) + 1);
+        }
+      }
+    }
+  }
+  const commonlyUsedTogether = [...tokenScores.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, togetherLimit)
+    .map(([idx]) => items[idx]);
 
   return { sameCategory, sharedMicronutrients, alphabetical, commonlyUsedTogether };
 }

@@ -31,10 +31,10 @@ import ContextualLinks from "@/components/ContextualLinks";
 import ReportDataIssue from "@/components/ReportDataIssue";
 import ShareFact from "@/components/ShareFact";
 
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 export function generateStaticParams() {
-  return getAllSlugs().map((slug) => ({ slug }));
+  return getAllSlugs().slice(0, 100).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({

@@ -4,6 +4,7 @@ import {
   getAllItems,
   getCategories,
   getItemsByCategory,
+  getCardItemsByCategory,
   getItemsByMetric,
   getHighestCalorie,
   getHighestProtein,
@@ -121,7 +122,7 @@ export default async function FoodCategoryPage({
     const cat = category as Category;
     const label = CATEGORY_LABELS[cat];
     const emoji = CATEGORY_EMOJI[cat];
-    const items = getItemsByCategory(cat);
+    const items = getCardItemsByCategory(cat);
     const total = items.length;
     const description = CATEGORY_DESCRIPTIONS[cat] ?? `Browse all ${label.toLowerCase()} with complete nutrition facts.`;
     const canonicalUrl = `${SITE_URL}/foods/${cat}`;

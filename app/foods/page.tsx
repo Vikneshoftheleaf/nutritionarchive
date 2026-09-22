@@ -1,6 +1,6 @@
 import Link from "next/link";
 import {
-  getAllItems,
+  getAllCardItems,
   getCategories,
   CATEGORY_LABELS,
   CATEGORY_EMOJI,
@@ -38,8 +38,8 @@ const FORMATTED_MODIFIED_DATE = new Date(SITE_LAST_MODIFIED).toLocaleDateString(
 
 export default function FoodsPage() {
   const categories = getCategories();
-  const items = getAllItems();
-  const total = items.length;
+  const items = getAllCardItems();
+  const total = getTotalCount();
 
   return (
     <>

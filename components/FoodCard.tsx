@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Flame, Beef } from "lucide-react";
 import { CATEGORY_EMOJI } from "@/lib/data";
-import type { NutritionItem } from "@/lib/types";
+import type { FoodCardItem, NutritionItem } from "@/lib/types";
 
 const CARD_ACCENTS: Record<string, string> = {
   fruit: "bg-duo-red/10 group-hover:bg-duo-red/15",
@@ -17,7 +17,7 @@ const CARD_ACCENTS: Record<string, string> = {
   oil_or_fat: "bg-duo-yellow/10 group-hover:bg-duo-yellow/15",
 };
 
-export default function FoodCard({ item }: { item: NutritionItem }) {
+export default function FoodCard({ item }: { item: FoodCardItem | NutritionItem }) {
   const accent = CARD_ACCENTS[item.category] ?? "bg-swan";
 
   return (

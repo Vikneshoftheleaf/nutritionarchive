@@ -66,3 +66,14 @@ export interface NutritionItem {
   meta_title: string;
   meta_description: string;
 }
+
+export interface FoodCardItem {
+  slug: string;
+  name: string;
+  category: Category;
+  intro: string;
+  per_100g: {
+    calories_kcal: number;
+    protein_g: number;
+  };
+}

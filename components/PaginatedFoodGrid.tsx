@@ -4,7 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense } from "react";
 import Link from "next/link";
 import FoodCard from "@/components/FoodCard";
-import type { NutritionItem } from "@/lib/types";
+import type { FoodCardItem, NutritionItem } from "@/lib/types";
 
 const PAGE_SIZE = 60;
 
@@ -13,7 +13,7 @@ function GridContent({
   basePath,
   emptyMessage = "No foods found.",
 }: {
-  items: NutritionItem[];
+  items: (FoodCardItem | NutritionItem)[];
   basePath: string;
   emptyMessage?: string;
 }) {
@@ -120,7 +120,7 @@ export default function PaginatedFoodGrid({
   basePath,
   emptyMessage,
 }: {
-  items: NutritionItem[];
+  items: (FoodCardItem | NutritionItem)[];
   basePath: string;
   emptyMessage?: string;
 }) {
