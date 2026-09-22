@@ -19,10 +19,11 @@ export default function ShareFact({
 }) {
   const [copied, setCopied] = useState(false);
   const title = `${foodName} Nutrition Facts`;
+  const currentUrl = () => (typeof window === "undefined" ? url : window.location.href);
 
   async function copyLink() {
     try {
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(currentUrl());
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2200);
     } catch {
@@ -32,7 +33,7 @@ export default function ShareFact({
 
   async function sharePage() {
     if (navigator.share) {
-      await navigator.share({ title, text: `Explore ${title} on ${SITE_NAME}.`, url });
+      await navigator.share({ title, text: `Explore ${title} on ${SITE_NAME}.`, url: currentUrl() });
       return;
     }
     await copyLink();
