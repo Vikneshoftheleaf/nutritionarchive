@@ -30,7 +30,13 @@ import ContextualLinks from "@/components/ContextualLinks";
 import ReportDataIssue from "@/components/ReportDataIssue";
 import ShareFact from "@/components/ShareFact";
 
-export const dynamic = "force-dynamic";
+// Render on request without building 10k pages at build time,
+// but heavily cache the rendered page after the first request.
+export function generateStaticParams() {
+  return [];
+}
+export const dynamicParams = true;
+export const revalidate = false;
 
 export async function generateMetadata({
   params,
