@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    cpus: 2,
+    cpus: 4,
     workerThreads: false,
   },
 };
