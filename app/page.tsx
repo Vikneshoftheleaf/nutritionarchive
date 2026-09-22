@@ -7,7 +7,7 @@ import JsonLd from "@/components/JsonLd";
 import ShareFact from "@/components/ShareFact";
 import { getFeaturedItems, getTotalCount } from "@/lib/data";
 import { SITE_NAME, SITE_URL, SITE_DESCRIPTION, SITE_TAGLINE } from "@/lib/site";
-import { createPageMetadata } from "@/lib/metadata";
+import { createPageMetadata, SITE_PUBLISHED, SITE_LAST_MODIFIED } from "@/lib/metadata";
 
 export const metadata = createPageMetadata({
   title: `${SITE_NAME} — ${SITE_TAGLINE}`,
@@ -29,6 +29,8 @@ export default function Home() {
           name: `${SITE_NAME} — ${SITE_TAGLINE}`,
           description: SITE_DESCRIPTION,
           url: SITE_URL,
+          datePublished: SITE_PUBLISHED,
+          dateModified: SITE_LAST_MODIFIED,
           about: {
             "@type": "Thing",
             name: "Nutrition Facts",

@@ -91,7 +91,7 @@ export default async function NutritionFactPage({
               "@type": "ListItem",
               position: 2,
               name: categoryLabel,
-              item: `${SITE_URL}/foods?category=${item.category}`,
+              item: `${SITE_URL}/foods/${item.category}`,
             },
             {
               "@type": "ListItem",
@@ -164,7 +164,7 @@ export default async function NutritionFactPage({
         <Breadcrumbs
           items={[
             { label: "Home", href: "/" },
-            { label: categoryLabel, href: `/foods?category=${item.category}` },
+            { label: categoryLabel, href: `/foods/${item.category}` },
             { label: item.name },
           ]}
         />
@@ -193,6 +193,18 @@ export default async function NutritionFactPage({
             <GlycemicBadge category={item.glycemic_index_category} />
             <span className="rounded-full bg-swan px-3.5 py-1.5 text-xs font-extrabold text-ink-light">
               Serving: {item.serving.description} ({item.serving.grams}g)
+            </span>
+            <span className="flex items-center gap-1.5 rounded-full bg-swan px-3.5 py-1.5 text-xs font-bold text-ink-light">
+              <span>Published:</span>
+              <time dateTime={SITE_PUBLISHED} className="font-extrabold text-ink">
+                {new Intl.DateTimeFormat("en", { dateStyle: "medium", timeZone: "UTC" }).format(new Date(`${SITE_PUBLISHED}T00:00:00Z`))}
+              </time>
+            </span>
+            <span className="flex items-center gap-1.5 rounded-full bg-swan px-3.5 py-1.5 text-xs font-bold text-ink-light">
+              <span>Updated:</span>
+              <time dateTime={SITE_LAST_MODIFIED} className="font-extrabold text-duo-green-dark">
+                {new Intl.DateTimeFormat("en", { dateStyle: "medium", timeZone: "UTC" }).format(new Date(`${SITE_LAST_MODIFIED}T00:00:00Z`))}
+              </time>
             </span>
           </div>
         </header>

@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getAllItems, getCategories, HUB_METRICS } from "@/lib/data";
 import { SITE_URL } from "@/lib/site";
 import { SITE_LAST_MODIFIED } from "@/lib/metadata";
-
+export const dynamic = "force-static";
 const PAGE_SIZE = 60;
 const LAST_MODIFIED = new Date(`${SITE_LAST_MODIFIED}T00:00:00.000Z`);
 
@@ -39,7 +39,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   const categoryRoutes: MetadataRoute.Sitemap = categories.map((c) => ({
-    url: foodsUrl({ category: c }),
+    url: `${SITE_URL}/foods/${c}`,
     lastModified: LAST_MODIFIED,
     changeFrequency: "weekly",
     priority: 0.6,
@@ -70,7 +70,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...categories.flatMap((category) => {
       const categoryItems = items.filter((item) => item.category === category);
       return Array.from({ length: pageCount(categoryItems.length) - 1 }, (_, index) => ({
-        url: foodsUrl({ category, page: index + 2 }),
+        url: `${SITE_URL}/foods/${category}?page=${index + 2}`,
         lastModified: LAST_MODIFIED,
         changeFrequency: "weekly" as const,
         priority: 0.5,
@@ -78,10 +78,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }),
   ];
 
-  const hubRoutes: MetadataRoute.Sitemap = HUB_METRICS.flatMap((metric) => [
-    { url: `${SITE_URL}/foods/${metric}`, lastModified: LAST_MODIFIED, changeFrequency: "weekly" as const, priority: 0.7 },
-    ...categories.map((category) => ({ url: `${SITE_URL}/foods/${metric}?category=${category}`, lastModified: LAST_MODIFIED, changeFrequency: "weekly" as const, priority: 0.55 })),
-  ]);
+  const hubRoutes: MetadataRoute.Sitemap = HUB_METRICS.map((metric) => ({
+    url: `${SITE_URL}/foods/${metric}`,
+    lastModified: LAST_MODIFIED,
+    changeFrequency: "weekly" as const,
+    priority: 0.7,
+  }));
 
   const itemRoutes: MetadataRoute.Sitemap = items.map((item) => ({
     url: `${SITE_URL}/nutrition-facts/${item.slug}`,

@@ -27,7 +27,7 @@ export default function Footer() {
               {categories.slice(0, 6).map((c) => (
                 <li key={c}>
                   <Link
-                    href={`/foods?category=${c}`}
+                    href={`/foods/${c}`}
                     className="text-sm font-semibold text-ink-light hover:text-duo-green"
                   >
                     {CATEGORY_EMOJI[c]} {CATEGORY_LABELS[c]}

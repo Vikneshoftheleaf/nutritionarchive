@@ -14,7 +14,8 @@ export function createPageMetadata({
   path,
   keywords,
   type = "website",
-  publishedTime,
+  publishedTime = SITE_PUBLISHED,
+  modifiedTime = SITE_LAST_MODIFIED,
 }: {
   title?: string | null;
   description?: string | null;
@@ -22,12 +23,16 @@ export function createPageMetadata({
   keywords?: string[] | null;
   type?: "website" | "article";
   publishedTime?: string | null;
+  modifiedTime?: string | null;
 }): Metadata {
   const safeTitle = title?.trim() || DEFAULT_TITLE;
   const safeDescription = description?.trim() || DEFAULT_DESCRIPTION;
   const safePath = path?.trim() || "/";
   const safeKeywords = keywords?.filter((keyword) => keyword?.trim()) ?? [];
   const url = `${SITE_URL}${safePath}`;
+  const safePublishedTime = publishedTime?.trim() || SITE_PUBLISHED;
+  const safeModifiedTime = modifiedTime?.trim() || SITE_LAST_MODIFIED;
+
   const openGraph: NonNullable<Metadata["openGraph"]> = {
     title: safeTitle,
     description: safeDescription,
@@ -36,8 +41,8 @@ export function createPageMetadata({
     locale: "en_US",
     type,
     images: [{ url: SITE_OG_IMAGE, alt: `${SITE_NAME} logo` }],
-    modifiedTime: SITE_LAST_MODIFIED,
-    ...(publishedTime?.trim() ? { publishedTime: publishedTime.trim() } : {}),
+    modifiedTime: safeModifiedTime,
+    publishedTime: safePublishedTime,
   };
 
   return {
@@ -58,7 +63,11 @@ export function createPageMetadata({
       images: [SITE_OG_IMAGE],
     },
     other: {
-      "last-modified": SITE_LAST_MODIFIED,
+      "last-modified": safeModifiedTime,
+      "article:published_time": safePublishedTime,
+      "article:modified_time": safeModifiedTime,
+      "publish-date": safePublishedTime,
+      "og:updated_time": safeModifiedTime,
     },
   };
 }

@@ -30,7 +30,7 @@ export default function CategoryGrid() {
           return (
             <Link
               key={cat}
-              href={`/foods?category=${cat}`}
+              href={`/foods/${cat}`}
               className={`group flex flex-col items-center gap-2 rounded-2xl border-2 border-hare bg-white p-5 text-center transition-all hover:-translate-y-1 ${RING_COLORS[idx % RING_COLORS.length]}`}
             >
               <span className="text-4xl">{CATEGORY_EMOJI[cat]}</span>
