@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: "Baloo 2", ui-rounded, "Segoe UI Rounded", system-ui, sans-serif;
+  --font-display: "Baloo 2", ui-rounded, "Segoe UI Rounded", system-ui, sans-serif;
+
+  /* Duolingo-inspired palette */
+  --color-duo-green: #58cc02;
+  --color-duo-green-dark: #46a302;
+  --color-duo-green-light: #d7ffb8;
+  --color-duo-blue: #1cb0f6;
+  --color-duo-blue-dark: #1899d6;
+  --color-duo-blue-light: #ddf4ff;
+  --color-duo-yellow: #ffc800;
+  --color-duo-yellow-dark: #e0a800;
+  --color-duo-red: #ff4b4b;
+  --color-duo-red-dark: #ea2b2b;
+  --color-duo-purple: #ce82ff;
+  --color-duo-purple-dark: #a568cc;
+  --color-duo-orange: #ff9600;
+  --color-duo-orange-dark: #e08600;
+
+  --color-ink: #3c3c3c;
+  --color-ink-light: #777777;
+  --color-eel: #4b4b4b;
+  --color-swan: #f7f7f7;
+  --color-wolf: #afafaf;
+  --color-hare: #e5e5e5;
+  --color-snow: #ffffff;
+  --color-polar: #ddf4ff;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #3c3c3c;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Baloo 2", ui-rounded, "Segoe UI Rounded", system-ui, sans-serif;
+}
+
+/* Duolingo-style "3D" pressable button shadow */
+.btn-duo {
+  box-shadow: 0 4px 0 0 var(--shadow-color, #46a302);
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+.btn-duo:active {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 0 var(--shadow-color, #46a302);
+}
+.btn-duo:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.card-duo {
+  box-shadow: 0 4px 0 0 var(--tw-shadow-color, #e5e5e5);
+}
+
+/* subtle floating animation for hero mascots/emoji */
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(var(--rot, 0deg));
+  }
+  50% {
+    transform: translateY(-10px) rotate(var(--rot, 0deg));
+  }
+}
+.animate-float {
+  animation: float-y 3.5s ease-in-out infinite;
+}
+
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.85) translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+.animate-pop {
+  animation: pop-in 0.35s cubic-bezier(0.22, 1.61, 0.36, 1) both;
+}
+
+/* progress bars for macros */
+.progress-track {
+  background: var(--color-hare);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress-fill {
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-hare);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-wolf);
+}
+
+/* accordion */
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+details[open] .chev {
+  transform: rotate(180deg);
+}
