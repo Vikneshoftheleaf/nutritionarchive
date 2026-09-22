@@ -12,7 +12,7 @@ export default function Header() {
   }));
 
   return (
-    <header className="sticky top-0 z-50 border-b-2 border-hare bg-snow/90">
+    <header className="sticky top-0 z-50 border-b-2 border-hare bg-white">
       <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 sm:gap-6 sm:px-6">
         <Link href="/" className="flex shrink-0 items-center gap-2">
         <Image src="/logo.png" alt={SITE_NAME} width={120} height={120} priority className="w-auto h-auto" />

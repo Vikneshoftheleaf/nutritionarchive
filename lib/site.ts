@@ -7,5 +7,4 @@ export const SITE_OWNER_ROLE = "developer, content creator, and nutrition enthus
 export const SITE_DESCRIPTION =
   "Bite-sized, accurate nutrition facts for hundreds of fruits, vegetables, grains, and more. Calories, macros, vitamins, and health benefits — explained simply.";
 export const TWITTER_HANDLE = "@nutritionarchive";
-export const FORMSUBMIT_EMAIL =
-  process.env.NEXT_PUBLIC_FORMSUBMIT_EMAIL || "chat.chillfeast@gmail.com";
+export const FORMSUBMIT_EMAIL = "chat.chillfeast@gmail.com";

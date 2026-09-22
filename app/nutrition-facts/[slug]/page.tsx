@@ -6,7 +6,6 @@ import {
   getAllSlugs,
   getItemBySlug,
   getRelatedItemGroups,
-  getAllItems,
   CATEGORY_LABELS,
   CATEGORY_EMOJI,
 } from "@/lib/data";
@@ -69,7 +68,14 @@ export default async function NutritionFactPage({
   if (!item) notFound();
 
   const relatedGroups = getRelatedItemGroups(item, 6);
-  const contextualItems = getAllItems().filter((candidate) => candidate.slug !== item.slug);
+  const contextualItems = Array.from(
+    new Map(
+      Object.values(relatedGroups)
+        .flat()
+        .filter((candidate) => candidate.slug !== item.slug)
+        .map((candidate) => [candidate.slug, candidate])
+    ).values()
+  );
   const url = `${SITE_URL}/nutrition-facts/${item.slug}`;
   const categoryLabel = CATEGORY_LABELS[item.category];
 

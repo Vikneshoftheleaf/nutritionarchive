@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Apple } from "lucide-react";
 import { getCategories, CATEGORY_LABELS, CATEGORY_EMOJI, getTotalCount } from "@/lib/data";
 import { SITE_NAME } from "@/lib/site";
-
+import Image from "next/image";
 export default function Footer() {
   const categories = getCategories();
   const year = new Date().getFullYear();
@@ -13,12 +13,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
           <div className="col-span-2 sm:col-span-1">
             <Link href="/" className="mb-3 flex items-center gap-2">
-              <span className="grid h-9 w-9 place-items-center rounded-xl bg-duo-green shadow-[0_3px_0_0_#46a302]">
-                <Apple className="h-5 w-5 fill-white text-white" strokeWidth={2.5} />
-              </span>
-              <span className="font-extrabold text-ink">
-                Nutri<span className="text-duo-green">Facts</span>
-              </span>
+              <Image src="/logo.png" alt={SITE_NAME} width={120} height={120} className="w-auto h-auto rounded-xl" />
             </Link>
             <p className="text-sm font-medium text-ink-light">
               Free nutrition facts for {getTotalCount()}+ foods — calories, macros,

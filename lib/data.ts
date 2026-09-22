@@ -2,6 +2,30 @@ import raw from "@/data/nutrition.json";
 import type { NutritionItem, Category } from "./types";
 
 const items = raw as unknown as NutritionItem[];
+const itemBySlug = new Map(items.map((item) => [item.slug, item]));
+const allSlugs = items.map((item) => item.slug);
+const alphabeticalItems = [...items].sort((a, b) => a.name.localeCompare(b.name));
+const itemsByCategory = new Map<Category, NutritionItem[]>();
+const relatedGroupsCache = new Map<string, ReturnType<typeof buildRelatedItemGroups>>();
+const relatedStopWords = new Set(["and", "with", "for", "from", "into", "the", "this", "that", "use", "used"]);
+
+for (const item of items) {
+  const categoryItems = itemsByCategory.get(item.category) ?? [];
+  categoryItems.push(item);
+  itemsByCategory.set(item.category, categoryItems);
+}
+
+const relatedTextTokens = new Map<string, Set<string>>(
+  items.map((item) => [
+    item.slug,
+    new Set(
+      [...item.serving_ideas, item.intro]
+        .join(" ")
+        .toLowerCase()
+        .match(/[a-z0-9]+/g) ?? []
+    ),
+  ])
+);
 
 export const CATEGORY_LABELS: Record<Category, string> = {
   fruit: "Fruits",
@@ -40,11 +64,11 @@ export function getAllItems(): NutritionItem[] {
 }
 
 export function getItemBySlug(slug: string): NutritionItem | undefined {
-  return items.find((i) => i.slug === slug);
+  return itemBySlug.get(slug);
 }
 
 export function getAllSlugs(): string[] {
-  return items.map((i) => i.slug);
+  return allSlugs;
 }
 
 export function getCategories(): Category[] {
@@ -56,7 +80,7 @@ export function getCategories(): Category[] {
 }
 
 export function getItemsByCategory(category: Category): NutritionItem[] {
-  return items.filter((i) => i.category === category);
+  return itemsByCategory.get(category) ?? [];
 }
 
 export function getRelatedItems(item: NutritionItem, count = 6): NutritionItem[] {
@@ -105,20 +129,24 @@ export function getItemsByMetric(
   return typeof limit === "number" ? sorted.slice(0, limit) : sorted;
 }
 
-function sharedTokens(left: string, right: string): number {
-  const stopWords = new Set(["and", "with", "for", "from", "into", "the", "this", "that", "use", "used"]);
-  const words = (value: string) => new Set(
-    value.toLowerCase().replace(/[^a-z0-9 ]/g, " ").split(/\s+/)
-      .filter((word) => word.length > 3 && !stopWords.has(word))
-  );
-  const rightWords = words(right);
-  return [...words(left)].filter((word) => rightWords.has(word)).length;
+function sharedTokens(left: Set<string>, right: Set<string>): number {
+  return [...left].filter((word) => word.length > 3 && !relatedStopWords.has(word) && right.has(word)).length;
 }
 
 export function getRelatedItemGroups(item: NutritionItem, count = 6) {
+  const cacheKey = `${item.slug}:${count}`;
+  const cached = relatedGroupsCache.get(cacheKey);
+  if (cached) return cached;
+
+  const groups = buildRelatedItemGroups(item, count);
+  relatedGroupsCache.set(cacheKey, groups);
+  return groups;
+}
+
+function buildRelatedItemGroups(item: NutritionItem, count: number) {
   const others = items.filter((candidate) => candidate.slug !== item.slug);
-  const sameCategory = others
-    .filter((candidate) => candidate.category === item.category)
+  const sameCategory = (itemsByCategory.get(item.category) ?? [])
+    .filter((candidate) => candidate.slug !== item.slug)
     .sort((a, b) => Math.abs(a.per_100g.calories_kcal - item.per_100g.calories_kcal) - Math.abs(b.per_100g.calories_kcal - item.per_100g.calories_kcal))
     .slice(0, Math.max(4, Math.ceil(count / 2)));
   const nutrientNames = new Set(item.key_micronutrients.map((nutrient) => nutrient.name.toLowerCase()));
@@ -131,14 +159,16 @@ export function getRelatedItemGroups(item: NutritionItem, count = 6) {
     .sort((a, b) => b.score - a.score || a.candidate.name.localeCompare(b.candidate.name))
     .map(({ candidate }) => candidate)
     .slice(0, Math.max(3, Math.ceil(count / 2)));
-  const alphabeticalItems = [...items].sort((a, b) => a.name.localeCompare(b.name));
   const alphabeticalIndex = alphabeticalItems.findIndex((candidate) => candidate.slug === item.slug);
   const alphabetical = alphabeticalItems
     .slice(Math.max(0, alphabeticalIndex - 2), alphabeticalIndex + 3)
     .filter((candidate) => candidate.slug !== item.slug);
-  const itemText = [...item.serving_ideas, item.intro].join(" ");
+  const itemTokens = relatedTextTokens.get(item.slug) ?? new Set<string>();
   const commonlyUsedTogether = others
-    .map((candidate) => ({ candidate, score: sharedTokens(itemText, [...candidate.serving_ideas, candidate.intro].join(" ")) }))
+    .map((candidate) => ({
+      candidate,
+      score: sharedTokens(itemTokens, relatedTextTokens.get(candidate.slug) ?? new Set<string>()),
+    }))
     .filter(({ score }) => score > 0)
     .sort((a, b) => b.score - a.score || a.candidate.name.localeCompare(b.candidate.name))
     .map(({ candidate }) => candidate)
