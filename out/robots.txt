@@ -1,5 +1,0 @@
-User-Agent: *
-Allow: /
-
-Host: https://nutritionarchive.com
-Sitemap: https://nutritionarchive.com/sitemap.xml

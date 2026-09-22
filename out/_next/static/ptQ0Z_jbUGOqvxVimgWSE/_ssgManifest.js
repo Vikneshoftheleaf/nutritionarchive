@@ -1,1 +1,0 @@
-self.__SSG_MANIFEST=new Set(["\u002Ffoods\u002F[category]","\u002Fnutrition-facts\u002F[slug]"]);self.__SSG_MANIFEST_CB&&self.__SSG_MANIFEST_CB()

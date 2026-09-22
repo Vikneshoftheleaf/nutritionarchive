@@ -34,7 +34,7 @@ import ShareFact from "@/components/ShareFact";
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return getAllSlugs().slice(0, 100).map((slug) => ({ slug }));
+  return getAllSlugs().map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
