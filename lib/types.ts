@@ -9,7 +9,9 @@ export type Category =
   | "beverage"
   | "herb_or_spice"
   | "nut_or_seed"
-  | "oil_or_fat";
+  | "oil_or_fat"
+  | "egg"
+  | "other";
 
 export interface Serving {
   description: string;

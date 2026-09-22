@@ -15,6 +15,8 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   herb_or_spice: "Herbs & Spices",
   nut_or_seed: "Nuts & Seeds",
   oil_or_fat: "Oils & Fats",
+  egg: "Eggs",
+  other: "Other Foods",
 };
 
 export const CATEGORY_EMOJI: Record<Category, string> = {
@@ -29,6 +31,8 @@ export const CATEGORY_EMOJI: Record<Category, string> = {
   herb_or_spice: "🌿",
   nut_or_seed: "🥜",
   oil_or_fat: "🫒",
+  egg: "🥚",
+  other: "🍽️",
 };
 
 export function getAllItems(): NutritionItem[] {
