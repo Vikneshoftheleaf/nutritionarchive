@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 
 import {
-  getAllSlugs,
   getItemBySlug,
   getRelatedItemGroups,
   CATEGORY_LABELS,
@@ -31,10 +30,7 @@ import ContextualLinks from "@/components/ContextualLinks";
 import ReportDataIssue from "@/components/ReportDataIssue";
 import ShareFact from "@/components/ShareFact";
 
-
-export function generateStaticParams() {
-  return getAllSlugs().slice(0, 100).map((slug) => ({ slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
