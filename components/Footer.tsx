@@ -13,7 +13,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
           <div className="col-span-2 sm:col-span-1">
             <Link href="/" className="mb-3 flex items-center gap-2">
-              <Image src="/logo.png" alt={SITE_NAME} width={120} height={120} className="w-auto h-auto rounded-xl" />
+              <Image src="/logo.png" alt={SITE_NAME} width={120} height={120} className="w-auto h-auto rounded-xl" priority />
             </Link>
             <p className="text-sm font-medium text-ink-light">
               Free nutrition facts for {getTotalCount()}+ foods — calories, macros,

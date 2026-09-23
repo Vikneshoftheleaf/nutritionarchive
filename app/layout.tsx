@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
-import "@fontsource/baloo-2/400.css";
-import "@fontsource/baloo-2/500.css";
-import "@fontsource/baloo-2/600.css";
-import "@fontsource/baloo-2/700.css";
-import "@fontsource/baloo-2/800.css";
+
+import { Baloo_2 } from "next/font/google";
+
+const baloo2 = Baloo_2({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"], // ← only the weights you actually use — check your Tailwind classes first
+  display: "swap",
+  variable: "--font-baloo",
+});
+
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -77,7 +82,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className="h-full antialiased" data-scroll-behavior="smooth">
+    <html lang="en" className={`${baloo2.variable} h-full antialiased`} data-scroll-behavior="smooth">
       <body className="flex min-h-full flex-col bg-white text-ink">
         <JsonLd
           data={{
