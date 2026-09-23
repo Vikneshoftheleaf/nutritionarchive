@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-
+import Script from 'next/script'
 import { Baloo_2 } from "next/font/google";
 
 const baloo2 = Baloo_2({
@@ -83,6 +83,21 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${baloo2.variable} h-full antialiased`} data-scroll-behavior="smooth">
+
+      <head>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-QCQ882V2MK"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-QCQ882V2MK');
+          `}
+        </Script>
+      </head>
       <body className="flex min-h-full flex-col bg-white text-ink">
         <JsonLd
           data={{
