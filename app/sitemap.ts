@@ -42,7 +42,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${SITE_URL}/foods/${c}`,
     lastModified: LAST_MODIFIED,
     changeFrequency: "weekly",
-    priority: 0.6,
+    priority: 0.8,
   }));
 
   const trustRoutes: MetadataRoute.Sitemap = [
@@ -57,7 +57,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${SITE_URL}/${page}`,
     lastModified: LAST_MODIFIED,
     changeFrequency: "monthly" as const,
-    priority: 0.5,
+    priority: 0.8,
   }));
 
   const paginatedRoutes: MetadataRoute.Sitemap = [
@@ -65,7 +65,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: foodsUrl({ page: index + 2 }),
       lastModified: LAST_MODIFIED,
       changeFrequency: "weekly" as const,
-      priority: 0.5,
+      priority: 0.7,
     })),
     ...categories.flatMap((category) => {
       const categoryItems = items.filter((item) => item.category === category);
@@ -73,7 +73,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         url: `${SITE_URL}/foods/${category}?page=${index + 2}`,
         lastModified: LAST_MODIFIED,
         changeFrequency: "weekly" as const,
-        priority: 0.5,
+        priority: 0.7,
       }));
     }),
   ];
@@ -82,14 +82,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${SITE_URL}/foods/${metric}`,
     lastModified: LAST_MODIFIED,
     changeFrequency: "weekly" as const,
-    priority: 0.7,
+    priority: 0.8,
   }));
 
   const itemRoutes: MetadataRoute.Sitemap = items.map((item) => ({
     url: `${SITE_URL}/nutrition-facts/${item.slug}`,
     lastModified: LAST_MODIFIED,
     changeFrequency: "monthly",
-    priority: 0.8,
+    priority: 1,
   }));
 
   return [...staticRoutes, ...categoryRoutes, ...trustRoutes, ...paginatedRoutes, ...hubRoutes, ...itemRoutes];
