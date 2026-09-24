@@ -15,6 +15,10 @@ const CARD_ACCENTS: Record<string, string> = {
   herb_or_spice: "bg-duo-green/10 group-hover:bg-duo-green/15",
   nut_or_seed: "bg-duo-orange/10 group-hover:bg-duo-orange/15",
   oil_or_fat: "bg-duo-yellow/10 group-hover:bg-duo-yellow/15",
+  alcoholic_beverage: "bg-duo-purple/10 group-hover:bg-duo-purple/15",
+  candy_or_dessert: "bg-duo-red/10 group-hover:bg-duo-red/15",
+  condiment_or_sauce: "bg-duo-orange/10 group-hover:bg-duo-orange/15",
+  snack_savory: "bg-duo-yellow/10 group-hover:bg-duo-yellow/15",
 };
 
 export default function FoodCard({ item }: { item: FoodCardItem | NutritionItem }) {

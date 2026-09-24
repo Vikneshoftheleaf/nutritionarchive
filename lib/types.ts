@@ -11,7 +11,11 @@ export type Category =
   | "nut_or_seed"
   | "oil_or_fat"
   | "egg"
-  | "other";
+  | "other"
+  | "alcoholic_beverage"
+  | "candy_or_dessert"
+  | "condiment_or_sauce"
+  | "snack_savory";
 
 export interface Serving {
   description: string;

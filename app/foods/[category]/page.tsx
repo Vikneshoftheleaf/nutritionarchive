@@ -38,6 +38,10 @@ const CATEGORY_DESCRIPTIONS: Record<Category, string> = {
   oil_or_fat: "Cooking oils, fats, and lipids with fatty acid breakdowns and calorie calculations.",
   egg: "Complete bioavailable protein sources packed with choline, vitamin B12, and essential fats.",
   other: "Specialty foods and culinary essentials to complete your nutrition tracking.",
+  alcoholic_beverage: "Explore beers, wines, and spirits with clear calorie, carbohydrate, and serving information.",
+  candy_or_dessert: "Browse sweets, baked treats, and desserts with transparent calories, sugars, and serving details.",
+  condiment_or_sauce: "Compare sauces, dressings, and condiments with nutrition facts for flavor-packed portions.",
+  snack_savory: "Find nutrition facts for savory snack foods, from crackers and chips to ready-to-eat bites.",
 };
 
 const FORMATTED_PUBLISHED_DATE = new Date(SITE_PUBLISHED).toLocaleDateString("en-US", {
@@ -137,6 +141,7 @@ export default async function FoodCategoryPage({
             headline: `${label} Nutrition Facts Directory`,
             description,
             url: canonicalUrl,
+            image: `${SITE_URL}/logo.png`,
             datePublished: SITE_PUBLISHED,
             dateModified: SITE_LAST_MODIFIED,
             inLanguage: "en-US",
@@ -148,10 +153,12 @@ export default async function FoodCategoryPage({
             mainEntity: {
               "@type": "ItemList",
               numberOfItems: total,
+              itemListOrder: "https://schema.org/ItemListUnordered",
               itemListElement: items.slice(0, 24).map((item, index) => ({
                 "@type": "ListItem",
                 position: index + 1,
                 name: item.name,
+                description: item.intro,
                 url: `${SITE_URL}/nutrition-facts/${item.slug}`,
               })),
             },

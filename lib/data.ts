@@ -66,6 +66,10 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   oil_or_fat: "Oils & Fats",
   egg: "Eggs",
   other: "Other Foods",
+  alcoholic_beverage: "Alcoholic Beverages",
+  candy_or_dessert: "Candy & Desserts",
+  condiment_or_sauce: "Condiments & Sauces",
+  snack_savory: "Savory Snacks",
 };
 
 export const CATEGORY_EMOJI: Record<Category, string> = {
@@ -82,6 +86,10 @@ export const CATEGORY_EMOJI: Record<Category, string> = {
   oil_or_fat: "🫒",
   egg: "🥚",
   other: "🍽️",
+  alcoholic_beverage: "🍷",
+  candy_or_dessert: "🍰",
+  condiment_or_sauce: "🫙",
+  snack_savory: "🍿",
 };
 
 export function getAllItems(): NutritionItem[] {

@@ -9,8 +9,12 @@ import {
   CATEGORY_LABELS,
   CATEGORY_EMOJI,
 } from "@/lib/data";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
-import { createPageMetadata, SITE_LAST_MODIFIED, SITE_PUBLISHED } from "@/lib/metadata";
+import { SITE_NAME, SITE_URL, SITE_OG_IMAGE, SITE_OWNER } from "@/lib/site";
+import {
+  createPageMetadata,
+  SITE_LAST_MODIFIED,
+  SITE_PUBLISHED,
+} from "@/lib/metadata";
 
 import JsonLd from "@/components/JsonLd";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -52,7 +56,13 @@ export async function generateMetadata({
     title,
     description,
     path: `/nutrition-facts/${item.slug}`,
-    keywords: [`nutrition facts ${item.name.toLowerCase()}`, `${item.name.toLowerCase()} nutrition`, `${item.name.toLowerCase()} calories`, `${item.name.toLowerCase()} protein`, "nutrition facts"],
+    keywords: [
+      `nutrition facts ${item.name.toLowerCase()}`,
+      `${item.name.toLowerCase()} nutrition`,
+      `${item.name.toLowerCase()} calories`,
+      `${item.name.toLowerCase()} protein`,
+      "nutrition facts",
+    ],
     type: "article",
     publishedTime: SITE_PUBLISHED,
   });
@@ -73,8 +83,8 @@ export default async function NutritionFactPage({
       Object.values(relatedGroups)
         .flat()
         .filter((candidate) => candidate.slug !== item.slug)
-        .map((candidate) => [candidate.slug, candidate])
-    ).values()
+        .map((candidate) => [candidate.slug, candidate]),
+    ).values(),
   );
   const url = `${SITE_URL}/nutrition-facts/${item.slug}`;
   const categoryLabel = CATEGORY_LABELS[item.category];
@@ -108,12 +118,23 @@ export default async function NutritionFactPage({
           "@type": "Article",
           headline: `${item.name} Nutrition Facts`,
           description: item.meta_description,
+          image: [SITE_OG_IMAGE],
           datePublished: SITE_PUBLISHED,
           dateModified: SITE_LAST_MODIFIED,
           url,
           mainEntityOfPage: url,
-          author: { "@type": "Organization", name: SITE_NAME },
-          publisher: { "@type": "Organization", name: SITE_NAME },
+          author: {
+            "@type": "Person",
+            name: SITE_OWNER,
+            jobTitle: "Developer, content creator, and nutrition enthusiast",
+            url: `${SITE_URL}/about`,
+          },
+          publisher: {
+            "@type": "Organization",
+            name: SITE_NAME,
+            url: SITE_URL,
+            logo: { "@type": "ImageObject", url: SITE_OG_IMAGE },
+          },
           articleSection: categoryLabel,
           about: {
             "@type": "Thing",
@@ -196,14 +217,26 @@ export default async function NutritionFactPage({
             </span>
             <span className="flex items-center gap-1.5 rounded-full bg-swan px-3.5 py-1.5 text-xs font-bold text-ink-light">
               <span>Published:</span>
-              <time dateTime={SITE_PUBLISHED} className="font-extrabold text-ink">
-                {new Intl.DateTimeFormat("en", { dateStyle: "medium", timeZone: "UTC" }).format(new Date(`${SITE_PUBLISHED}T00:00:00Z`))}
+              <time
+                dateTime={SITE_PUBLISHED}
+                className="font-extrabold text-ink"
+              >
+                {new Intl.DateTimeFormat("en", {
+                  dateStyle: "medium",
+                  timeZone: "UTC",
+                }).format(new Date(`${SITE_PUBLISHED}T00:00:00Z`))}
               </time>
             </span>
             <span className="flex items-center gap-1.5 rounded-full bg-swan px-3.5 py-1.5 text-xs font-bold text-ink-light">
               <span>Updated:</span>
-              <time dateTime={SITE_LAST_MODIFIED} className="font-extrabold text-duo-green-dark">
-                {new Intl.DateTimeFormat("en", { dateStyle: "medium", timeZone: "UTC" }).format(new Date(`${SITE_LAST_MODIFIED}T00:00:00Z`))}
+              <time
+                dateTime={SITE_LAST_MODIFIED}
+                className="font-extrabold text-duo-green-dark"
+              >
+                {new Intl.DateTimeFormat("en", {
+                  dateStyle: "medium",
+                  timeZone: "UTC",
+                }).format(new Date(`${SITE_LAST_MODIFIED}T00:00:00Z`))}
               </time>
             </span>
           </div>
@@ -242,7 +275,10 @@ export default async function NutritionFactPage({
           <h2 className="mb-4 text-2xl font-extrabold text-ink">
             Health benefits of {item.name.toLowerCase()}
           </h2>
-          <BenefitsList benefits={item.health_benefits} relatedItems={contextualItems} />
+          <BenefitsList
+            benefits={item.health_benefits}
+            relatedItems={contextualItems}
+          />
         </section>
 
         {/* Things to consider */}
@@ -259,11 +295,64 @@ export default async function NutritionFactPage({
             <h2 className="mb-4 text-2xl font-extrabold text-ink">
               Serving ideas
             </h2>
-            <ServingIdeas ideas={item.serving_ideas} relatedItems={contextualItems} />
+            <ServingIdeas
+              ideas={item.serving_ideas}
+              relatedItems={contextualItems}
+            />
           </div>
           <div>
             <h2 className="mb-4 text-2xl font-extrabold text-ink">Storage</h2>
             <StorageTip tip={item.storage_tip} relatedItems={contextualItems} />
+          </div>
+        </section>
+
+        <section
+          className="mt-5 grid gap-3 rounded-2xl border-2 border-hare bg-swan p-4 text-sm sm:grid-cols-3"
+          aria-label="Data trust information"
+        >
+          <div>
+            <p className="font-extrabold text-ink">Editorial review</p>
+            <p className="mt-1 font-medium leading-relaxed text-ink-light">
+              Presented and reviewed by {SITE_OWNER} on{" "}
+              <time
+                dateTime={SITE_LAST_MODIFIED}
+                className="font-bold text-ink"
+              >
+                {new Intl.DateTimeFormat("en", {
+                  dateStyle: "medium",
+                  timeZone: "UTC",
+                }).format(new Date(`${SITE_LAST_MODIFIED}T00:00:00Z`))}
+              </time>
+              .
+            </p>
+          </div>
+          <div>
+            <p className="font-extrabold text-ink">Data context</p>
+            <p className="mt-1 font-medium leading-relaxed text-ink-light">
+              Records are compiled and normalized from public nutrition sources.
+              Read the{" "}
+              <Link
+                href="/methodology"
+                className="font-extrabold text-duo-green hover:text-duo-green-dark"
+              >
+                methodology
+              </Link>
+              .
+            </p>
+          </div>
+          <div>
+            <p className="font-extrabold text-ink">Correction status</p>
+            <p className="mt-1 font-medium leading-relaxed text-ink-light">
+              Found an issue? Submit details using the correction form below or
+              read our{" "}
+              <Link
+                href="/corrections"
+                className="font-extrabold text-duo-green hover:text-duo-green-dark"
+              >
+                corrections policy
+              </Link>
+              .
+            </p>
           </div>
         </section>
 
@@ -276,17 +365,27 @@ export default async function NutritionFactPage({
         </section>
 
         {/* Related */}
-        <RelatedGrid items={relatedGroups.sameCategory} title={`More ${categoryLabel.toLowerCase()} nutrition facts`} />
-        <RelatedGrid items={relatedGroups.sharedMicronutrients} title="Foods with similar micronutrients" />
-        <RelatedGrid items={relatedGroups.alphabetical} title="Explore nearby foods" />
-        <RelatedGrid items={relatedGroups.commonlyUsedTogether} title="Often used together" />
+        <RelatedGrid
+          items={relatedGroups.sameCategory}
+          title={`More ${categoryLabel.toLowerCase()} nutrition facts`}
+        />
+        <RelatedGrid
+          items={relatedGroups.sharedMicronutrients}
+          title="Foods with similar micronutrients"
+        />
+        <RelatedGrid
+          items={relatedGroups.alphabetical}
+          title="Explore nearby foods"
+        />
+        <RelatedGrid
+          items={relatedGroups.commonlyUsedTogether}
+          title="Often used together"
+        />
 
         <ReportDataIssue foodName={item.name} />
 
         <div className="mt-14 rounded-2xl border-2 border-dashed border-hare p-6 text-center">
-          <p className="font-bold text-ink-light">
-            Looking for another food?
-          </p>
+          <p className="font-bold text-ink-light">Looking for another food?</p>
           <Link
             href="/foods"
             className="mt-3 inline-block rounded-2xl bg-duo-green px-6 py-3 font-extrabold text-white shadow-[0_4px_0_0_#46A302] transition-transform hover:-translate-y-0.5 active:translate-y-1 active:shadow-none"

@@ -1,6 +1,8 @@
 import InfoPage, { InfoSection, InfoList } from "@/components/InfoPage";
+import JsonLd from "@/components/JsonLd";
 import { createPageMetadata } from "@/lib/metadata";
-import { SITE_NAME } from "@/lib/site";
+import { SITE_NAME, SITE_URL, SITE_OWNER } from "@/lib/site";
+import { getTotalCount } from "@/lib/data";
 
 export const metadata = createPageMetadata({
   title: "Data Methodology & Sources",
@@ -11,11 +13,27 @@ export const metadata = createPageMetadata({
 
 export default function MethodologyPage() {
   return (
-    <InfoPage
-      eyebrow="Methodology & sources"
-      title="How our nutrition data is presented"
-      intro="Transparent context matters as much as a number. Here is how to read the data in this directory and where its limits are."
-    >
+    <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Dataset",
+          name: `${SITE_NAME} Food Nutrition Dataset`,
+          description: `A searchable collection of ${getTotalCount()} food nutrition records with calories, macronutrients, selected micronutrients, serving information, and educational context.`,
+          url: `${SITE_URL}/methodology`,
+          creator: { "@type": "Person", name: SITE_OWNER, url: `${SITE_URL}/about` },
+          publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+          isAccessibleForFree: true,
+          inLanguage: "en-US",
+          variableMeasured: ["Calories", "Protein", "Carbohydrates", "Fiber", "Fat", "Selected micronutrients"],
+          citation: ["https://fdc.nal.usda.gov/", "https://world.openfoodfacts.org/"],
+        }}
+      />
+      <InfoPage
+        eyebrow="Methodology & sources"
+        title="How our nutrition data is presented"
+        intro="Transparent context matters as much as a number. Here is how to read the data in this directory and where its limits are."
+      >
       <InfoSection title="A consistent comparison basis">
         <p>Most values on {SITE_NAME} are shown per 100 grams. That makes foods easier to compare even when their typical serving sizes are different. Each page also shows the serving description and gram weight available for that food.</p>
         <p>A per-100-gram value is not the same as the amount in a typical portion. Foods can also be listed in different preparation states, including raw, cooked, dried, or drained. Always check the context stated on the page and compare like with like.</p>
@@ -39,6 +57,7 @@ export default function MethodologyPage() {
       <InfoSection title="Important limitation">
         <p>Nutrition data is an estimate for general education, not a guarantee for a particular product or meal. For medical, allergy, sports-performance, pregnancy, or disease-management decisions, use current professional or product-specific guidance.</p>
       </InfoSection>
-    </InfoPage>
+      </InfoPage>
+    </>
   );
 }

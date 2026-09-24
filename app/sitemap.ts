@@ -11,8 +11,8 @@ function foodsUrl(params?: Record<string, string | number>): string {
   const searchParams = new URLSearchParams(
     Object.entries(params).map(([key, value]) => [key, String(value)])
   );
-  // Next serializes sitemap URLs as XML text without escaping query separators.
-  return `${SITE_URL}/foods?${searchParams.toString().replace(/&/g, "&amp;")}`;
+  // Next serializes the URL and escapes query separators for the sitemap XML.
+  return `${SITE_URL}/foods?${searchParams.toString()}`;
 }
 
 function pageCount(count: number): number {

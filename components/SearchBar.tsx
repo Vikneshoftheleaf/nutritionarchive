@@ -211,7 +211,7 @@ export default function SearchBar({
       {/* ── Mobile full-screen overlay ─────────────────────────────────── */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-[9999] flex flex-col"
+          className="fixed inset-0 z-9999 flex flex-col"
           style={{ background: "rgba(0,0,0,0.45)" }}
         >
           {/* Overlay panel */}

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { SITE_NAME, SITE_URL, SITE_OG_IMAGE, TWITTER_HANDLE } from "./site";
 
-export const SITE_LAST_MODIFIED = "2026-09-22";
-export const SITE_PUBLISHED = "2026-09-22";
+export const SITE_LAST_MODIFIED = "2026-09-24";
+export const SITE_PUBLISHED = "2026-09-24";
 
 const DEFAULT_TITLE = `${SITE_NAME} — Nutrition Facts`;
 const DEFAULT_DESCRIPTION =

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import InfoPage, { InfoSection } from "@/components/InfoPage";
-import { SITE_NAME, SITE_OWNER, SITE_OWNER_ROLE } from "@/lib/site";
+import JsonLd from "@/components/JsonLd";
+import { SITE_NAME, SITE_OWNER, SITE_OWNER_ROLE, SITE_URL, SITE_OG_IMAGE } from "@/lib/site";
 import { createPageMetadata } from "@/lib/metadata";
 
 export const metadata = createPageMetadata({
@@ -12,11 +13,28 @@ export const metadata = createPageMetadata({
 
 export default function AboutPage() {
   return (
-    <InfoPage
-      eyebrow={`About ${SITE_NAME}`}
-      title="Nutrition facts without the guesswork"
-      intro={`${SITE_NAME} is a searchable food directory designed to make nutrition information easier to understand and compare.`}
-    >
+    <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "ProfilePage",
+          name: `About ${SITE_NAME}`,
+          url: `${SITE_URL}/about`,
+          mainEntity: {
+            "@type": "Person",
+            name: SITE_OWNER,
+            description: `${SITE_OWNER} is the ${SITE_OWNER_ROLE} behind ${SITE_NAME}.`,
+            url: `${SITE_URL}/about`,
+            image: SITE_OG_IMAGE,
+            worksFor: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+          },
+        }}
+      />
+      <InfoPage
+        eyebrow={`About ${SITE_NAME}`}
+        title="Nutrition facts without the guesswork"
+        intro={`${SITE_NAME} is a searchable food directory designed to make nutrition information easier to understand and compare.`}
+      >
       <InfoSection title="What we do">
         <p>{SITE_NAME} is an independent, free-to-use nutrition reference created and maintained by {SITE_OWNER}, a {SITE_OWNER_ROLE}. It was built to make everyday nutrition information easier for people to find, read, and compare.</p>
         <p>The site organizes food records into readable pages covering calories, macronutrients, vitamins, minerals, serving information, and practical context. It is intended to be useful to curious eaters, students, home cooks, creators, and anyone who wants a quick starting point for learning about food.</p>
@@ -39,6 +57,7 @@ export default function AboutPage() {
       <InfoSection title="Keeping the directory useful">
         <p>Every facts page includes a correction form. When you spot a questionable value, send us the food name, the value that looks wrong, and a suggested correction. We appreciate specific reports with a source or product label. See our <Link className="font-extrabold text-duo-green hover:text-duo-green-dark" href="/corrections">corrections policy</Link> for details.</p>
       </InfoSection>
-    </InfoPage>
+      </InfoPage>
+    </>
   );
 }

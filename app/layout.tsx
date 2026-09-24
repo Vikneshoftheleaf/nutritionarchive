@@ -69,10 +69,11 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/favicon.ico", type: "image/x-icon" },
-      { url: "/icon0.svg", type: "image/svg+xml" },
-      { url: "/icon1.png", type: "image/png" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon-16x16.png", type: "image/png", sizes: "16x16" },
+      { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
     ],
-    apple: [{ url: "/apple-icon.png", type: "image/png" }],
+    apple: [{ url: "/apple-touch-icon.png", type: "image/png", sizes: "180x180" }],
   },
   manifest: "/manifest.json",
   alternates: {
@@ -122,7 +123,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             "@type": "Organization",
             name: SITE_NAME,
             url: SITE_URL,
-            logo: `${SITE_URL}/icon0.svg`,
+            logo: `${SITE_URL}/logo.png`,
           }}
         />
         <Header />
