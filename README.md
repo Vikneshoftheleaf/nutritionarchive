@@ -47,6 +47,27 @@ npm run build    # production build + static generation check
 npm run start    # serve the production build
 ```
 
+## Deploy to Cloudflare Workers
+
+This project uses the OpenNext Cloudflare adapter. The Worker serves the
+Next.js app and its generated assets; no static-export setting is needed.
+OpenNext warns that Windows builds are not fully supported; use WSL for more
+reliable builds and deployments.
+
+1. Install dependencies with `npm install`.
+2. Authenticate Wrangler with `npx wrangler login`.
+3. Optionally copy `.dev.vars.example` to `.dev.vars` for local Workers
+   preview.
+4. Run `npm run cf:preview` to build and test in the Workers runtime.
+5. Run `npm run cf:deploy` to build and deploy. `npm run cf:upload` uploads a
+   version without activating it.
+
+The Worker name and self-reference binding are set in `wrangler.jsonc`. Update
+the `name` and matching service name there if you want a different Worker name.
+Wrangler uses the authenticated account unless an account ID is explicitly
+configured. Add any secrets through Wrangler or the Cloudflare dashboard;
+don't put secrets in `wrangler.jsonc` or `.dev.vars.example`.
+
 ## Before going live
 
 - Update `lib/site.ts` with your real domain (`SITE_URL`) — this feeds every
