@@ -58,17 +58,13 @@ Use `npm run build` instead of `npx next build` so the post-build step removes
 unused React Server Component payloads and checks Pages asset limits before
 upload. `wrangler.jsonc` also declares `pages_build_output_dir: "./out"`.
 
-For a standard Git-connected **Pages** project, leave any custom deploy command
-blank: Pages publishes the configured `out` directory after the build. If
-using a build setup that requires a separate deploy command, use
-`npm run cf:publish` (or `npx wrangler pages deploy out
---project-name=nutritionarchive`). Do **not** use `wrangler deploy`; that
-command deploys Workers, not a static Pages site.
+For a Git-connected **Pages** project, do not configure a custom deploy
+command. Pages publishes the configured `out` directory automatically after
+the build; `wrangler.jsonc` declares `pages_build_output_dir: "./out"`.
 
-To deploy manually, authenticate with `npx wrangler login`, then run
-`npm run cf:deploy` to build and publish. Use `npm run cf:preview` for a local
-production preview. If you choose a different Pages project name, update it
-in the `cf:publish` and `cf:deploy` scripts.
+Use `npm run cf:preview` only for a local production preview. Do not use
+`wrangler deploy` or `wrangler pages deploy` as a Git integration deploy
+command.
 
 ## Before going live
 

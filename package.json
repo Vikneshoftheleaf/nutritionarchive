@@ -7,9 +7,7 @@
     "build": "next build && node scripts/prepare-pages-export.mjs",
     "preview": "npm run build && wrangler pages dev out",
     "lint": "eslint",
-    "cf:preview": "npm run preview",
-    "cf:publish": "wrangler pages deploy out --project-name=nutritionarchive",
-    "cf:deploy": "npm run build && wrangler pages deploy out --project-name=nutritionarchive"
+    "cf:preview": "npm run preview"
   },
   "dependencies": {
     "@fontsource/baloo-2": "^5.3.0",
