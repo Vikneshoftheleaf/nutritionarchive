@@ -81,7 +81,7 @@ if (!Array.isArray(searchIndex) || searchIndex.length !== slugs.length) {
 const outputFiles = walkFiles(outputDir, outputDir);
 if (outputFiles.length > assetLimit) {
   throw new Error(
-    `Static export contains ${outputFiles.length} files, exceeding the Cloudflare Pages Free limit of ${assetLimit}.`,
+    `Static export contains ${outputFiles.length} files, exceeding the Cloudflare Workers Free static asset limit of ${assetLimit}.`,
   );
 }
 
@@ -94,10 +94,10 @@ const oversizedFiles = outputFiles
 if (oversizedFiles.length > 0) {
   const largest = oversizedFiles[0];
   throw new Error(
-    `Static asset ${largest.path} is ${largest.size} bytes, exceeding Cloudflare Pages' 25 MiB per-file limit.`,
+    `Static asset ${largest.path} is ${largest.size} bytes, exceeding Cloudflare Workers' 25 MiB per-file limit.`,
   );
 }
 
 console.log(
-  `Cloudflare Pages export ready: ${outputFiles.length} files; verified ${slugs.length} nutrition pages; removed ${removedPayloadCount} unused RSC payload files (${(removedPayloadBytes / 1024 / 1024).toFixed(1)} MiB).`,
+  `Cloudflare Workers static assets ready: ${outputFiles.length} files; verified ${slugs.length} nutrition pages; removed ${removedPayloadCount} unused RSC payload files (${(removedPayloadBytes / 1024 / 1024).toFixed(1)} MiB).`,
 );

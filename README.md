@@ -1,7 +1,7 @@
 # nutritionarchive — Duolingo-styled Nutrition pSEO Site
 
 A Next.js 16 (App Router) programmatic SEO site built on a 4,000-item nutrition
-dataset and statically exported for Cloudflare Pages.
+dataset and statically exported as Cloudflare Workers static assets.
 
 ## What's built
 
@@ -29,8 +29,8 @@ and verifies a detail page for every record.
 
 Next.js emits React Server Component payload files for client-side navigation.
 This site uses ordinary browser navigation instead, so the build removes those
-unused payloads before deployment. A post-build check enforces Cloudflare Pages
-Free's 20,000-file and 25 MiB per-file limits. `sitemap.xml` stays under
+unused payloads before deployment. A post-build check enforces Cloudflare Workers Free's 20,000-static-asset and 25 MiB per-file limits.
+`sitemap.xml` stays under
 Google's 50k-URL-per-sitemap limit for up to 10k records.
 
 ## Development
@@ -38,33 +38,32 @@ Google's 50k-URL-per-sitemap limit for up to 10k records.
 ```bash
 npm install
 npm run dev        # http://localhost:3000
-npm run build      # static export to out/ and Pages limit checks
-npm run preview    # serve out/ locally with Wrangler Pages
+npm run build      # static export to out/ and Workers asset-limit checks
+npm run preview    # preview the static assets with Wrangler
 ```
 
-## Deploy to Cloudflare Pages
+## Deploy to Cloudflare Workers
 
-This is a fully static Next.js export; it does not need a Worker, server
-rendering, or on-demand routes.
+This is a fully static Next.js export. Wrangler deploys the contents of `out/`
+as Workers static assets; requests for generated HTML files are served directly
+without running application code in a Worker. This avoids the CPU timeout from
+server-rendering nutrition pages.
 
-For a Git-connected deployment, create a **Workers & Pages > Pages** project,
-connect this repository, and select **Next.js (Static HTML Export)** as the
-framework preset. Set:
+Use a **Workers Builds** project connected to this repository. Set:
 
 - **Build command:** `npm run build`
-- **Build output directory:** `out`
+- **Deploy command:** `npx wrangler deploy`
 
-Use `npm run build` instead of `npx next build` so the post-build step removes
-unused React Server Component payloads and checks Pages asset limits before
-upload. `wrangler.jsonc` also declares `pages_build_output_dir: "./out"`.
+There is no separate output-directory setting in Workers Builds. The
+`assets.directory` setting in `wrangler.jsonc` points Wrangler to `./out`;
+the build script creates that directory before Wrangler runs. Keep the
+pre-filled `npx wrangler deploy` command. Do not use `wrangler pages deploy`
+for this Workers project.
 
-For a Git-connected **Pages** project, do not configure a custom deploy
-command. Pages publishes the configured `out` directory automatically after
-the build; `wrangler.jsonc` declares `pages_build_output_dir: "./out"`.
-
-Use `npm run cf:preview` only for a local production preview. Do not use
-`wrangler deploy` or `wrangler pages deploy` as a Git integration deploy
-command.
+The build script verifies every nutrition page and keeps the static asset
+count below the Workers Free limit before deployment. For a local production
+preview, run `npm run cf:preview`. For a manual build and deploy, authenticate
+with `npx wrangler login` and run `npm run cf:deploy`.
 
 ## Before going live
 

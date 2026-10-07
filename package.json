@@ -5,9 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build && node scripts/prepare-pages-export.mjs",
-    "preview": "npm run build && wrangler pages dev out",
+    "preview": "npm run build && wrangler dev",
     "lint": "eslint",
-    "cf:preview": "npm run preview"
+    "cf:preview": "npm run preview",
+    "cf:deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "@fontsource/baloo-2": "^5.3.0",
