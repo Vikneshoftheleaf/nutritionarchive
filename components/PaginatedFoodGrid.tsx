@@ -1,8 +1,8 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import Link from "next/link";
+import Link from "@/components/StaticLink";
 import FoodCard from "@/components/FoodCard";
 import type { FoodCardItem, NutritionItem } from "@/lib/types";
 
@@ -18,7 +18,6 @@ function GridContent({
   emptyMessage?: string;
 }) {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const pageParam = searchParams.get("page");
   const currentPage = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
 
@@ -31,12 +30,6 @@ function GridContent({
   function pageHref(p: number) {
     if (p <= 1) return basePath;
     return `${basePath}?page=${p}`;
-  }
-
-  function handlePageClick(e: React.MouseEvent, p: number) {
-    e.preventDefault();
-    if (p === activePage) return;
-    router.push(pageHref(p), { scroll: true });
   }
 
   return (
@@ -60,7 +53,6 @@ function GridContent({
         >
           <Link
             href={pageHref(Math.max(1, activePage - 1))}
-            onClick={(e) => handlePageClick(e, Math.max(1, activePage - 1))}
             rel={activePage > 1 ? "prev" : undefined}
             aria-disabled={activePage === 1}
             className={`rounded-xl border-2 border-hare px-3 py-2 text-sm font-extrabold ${
@@ -85,7 +77,6 @@ function GridContent({
                 )}
                 <Link
                   href={pageHref(p)}
-                  onClick={(e) => handlePageClick(e, p)}
                   className={`rounded-xl border-2 px-3.5 py-2 text-sm font-extrabold ${
                     p === activePage
                       ? "border-duo-green bg-duo-green text-white"
@@ -98,7 +89,6 @@ function GridContent({
             ))}
           <Link
             href={pageHref(Math.min(totalPages, activePage + 1))}
-            onClick={(e) => handlePageClick(e, Math.min(totalPages, activePage + 1))}
             rel={activePage < totalPages ? "next" : undefined}
             aria-disabled={activePage === totalPages}
             className={`rounded-xl border-2 border-hare px-3 py-2 text-sm font-extrabold ${

@@ -1,16 +1,9 @@
-import Link from "next/link";
+import Link from "@/components/StaticLink";
 import SearchBar from "./SearchBar";
-import { getAllItems } from "@/lib/data";
 import Image from "next/image";
 import { SITE_NAME } from "@/lib/site";
 
 export default function Header() {
-  const items = getAllItems().map((i) => ({
-    slug: i.slug,
-    name: i.name,
-    category: i.category,
-  }));
-
   return (
     <header className="sticky top-0 z-50 border-b-2 border-hare bg-white">
       <div className="mx-auto flex max-w-6xl items-center gap-2 px-3 py-2 sm:gap-6 sm:px-6 sm:py-3">
@@ -28,7 +21,7 @@ export default function Header() {
 
         {/* Search bar — takes all remaining space */}
         <div className="flex-1 min-w-0">
-          <SearchBar items={items} compact />
+          <SearchBar compact />
         </div>
 
         {/* Nav — hidden on mobile */}

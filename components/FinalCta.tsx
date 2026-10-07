@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/StaticLink";
 import { ArrowRight } from "lucide-react";
 import { getTotalCount } from "@/lib/data";
 

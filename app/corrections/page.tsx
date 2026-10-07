@@ -1,5 +1,5 @@
 import InfoPage, { InfoSection, InfoList } from "@/components/InfoPage";
-import Link from "next/link";
+import Link from "@/components/StaticLink";
 import { createPageMetadata } from "@/lib/metadata";
 import { SITE_NAME } from "@/lib/site";
 

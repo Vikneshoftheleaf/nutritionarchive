@@ -1,6 +1,6 @@
-import Link from "next/link";
+import Link from "@/components/StaticLink";
 import { Flame, Beef } from "lucide-react";
-import { CATEGORY_EMOJI } from "@/lib/data";
+import { CATEGORY_EMOJI } from "@/lib/category-meta";
 import type { FoodCardItem, NutritionItem } from "@/lib/types";
 
 const CARD_ACCENTS: Record<string, string> = {

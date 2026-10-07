@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Link from "next/link";
 
 import {
+  getAllSlugs,
   getItemBySlug,
   getRelatedItemGroups,
   CATEGORY_LABELS,
@@ -33,6 +33,13 @@ import RelatedGrid from "@/components/RelatedGrid";
 import ContextualLinks from "@/components/ContextualLinks";
 import ReportDataIssue from "@/components/ReportDataIssue";
 import ShareFact from "@/components/ShareFact";
+import Link from "@/components/StaticLink";
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return getAllSlugs().map((slug) => ({ slug }));
+}
 
 export async function generateMetadata({
   params,

@@ -1,5 +1,5 @@
 import SearchBar from "./SearchBar";
-import { getAllItems, getTotalCount, getCategories } from "@/lib/data";
+import { getTotalCount, getCategories } from "@/lib/data";
 import { Sparkles } from "lucide-react";
 
 const FLOATERS = [
@@ -12,11 +12,6 @@ const FLOATERS = [
 ];
 
 export default function Hero() {
-  const items = getAllItems().map((i) => ({
-    slug: i.slug,
-    name: i.name,
-    category: i.category,
-  }));
   const total = getTotalCount();
   const categoryCount = getCategories().length;
 
@@ -54,7 +49,7 @@ export default function Hero() {
         </p>
 
         <div className="mt-8">
-          <SearchBar items={items} />
+          <SearchBar />
         </div>
 
         <p className="mt-4 text-xs font-bold uppercase tracking-wide text-ink-light/70">

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/StaticLink";
 import { Apple } from "lucide-react";
 import { getCategories, CATEGORY_LABELS, CATEGORY_EMOJI, getTotalCount } from "@/lib/data";
 import { SITE_NAME } from "@/lib/site";

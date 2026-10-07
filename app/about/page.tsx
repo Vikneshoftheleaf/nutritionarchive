@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/StaticLink";
 import InfoPage, { InfoSection } from "@/components/InfoPage";
 import JsonLd from "@/components/JsonLd";
 import { SITE_NAME, SITE_OWNER, SITE_OWNER_ROLE, SITE_URL, SITE_OG_IMAGE } from "@/lib/site";

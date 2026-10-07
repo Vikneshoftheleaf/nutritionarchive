@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/StaticLink";
 import { getCategories, getItemsByCategory, CATEGORY_LABELS, CATEGORY_EMOJI } from "@/lib/data";
 
 const RING_COLORS = [

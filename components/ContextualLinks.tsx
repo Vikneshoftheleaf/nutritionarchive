@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/StaticLink";
 import type { NutritionItem } from "@/lib/types";
 
 function escapeRegExp(value: string): string {

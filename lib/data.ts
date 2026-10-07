@@ -1,6 +1,8 @@
 import raw from "@/data/nutrition.json";
 import type { NutritionItem, Category, FoodCardItem } from "./types";
 
+export { CATEGORY_EMOJI, CATEGORY_LABELS } from "./category-meta";
+
 const items = raw as unknown as NutritionItem[];
 const itemBySlug = new Map(items.map((item) => [item.slug, item]));
 const allSlugs = items.map((item) => item.slug);
@@ -51,46 +53,6 @@ for (let i = 0; i < items.length; i++) {
     }
   }
 }
-
-export const CATEGORY_LABELS: Record<Category, string> = {
-  fruit: "Fruits",
-  vegetable: "Vegetables",
-  grain: "Grains",
-  meat: "Meat & Poultry",
-  seafood: "Seafood",
-  dairy: "Dairy",
-  legume: "Legumes",
-  beverage: "Beverages",
-  herb_or_spice: "Herbs & Spices",
-  nut_or_seed: "Nuts & Seeds",
-  oil_or_fat: "Oils & Fats",
-  egg: "Eggs",
-  other: "Other Foods",
-  alcoholic_beverage: "Alcoholic Beverages",
-  candy_or_dessert: "Candy & Desserts",
-  condiment_or_sauce: "Condiments & Sauces",
-  snack_savory: "Savory Snacks",
-};
-
-export const CATEGORY_EMOJI: Record<Category, string> = {
-  fruit: "🍎",
-  vegetable: "🥦",
-  grain: "🌾",
-  meat: "🍗",
-  seafood: "🐟",
-  dairy: "🥛",
-  legume: "🫘",
-  beverage: "🥤",
-  herb_or_spice: "🌿",
-  nut_or_seed: "🥜",
-  oil_or_fat: "🫒",
-  egg: "🥚",
-  other: "🍽️",
-  alcoholic_beverage: "🍷",
-  candy_or_dessert: "🍰",
-  condiment_or_sauce: "🫙",
-  snack_savory: "🍿",
-};
 
 export function getAllItems(): NutritionItem[] {
   return items;

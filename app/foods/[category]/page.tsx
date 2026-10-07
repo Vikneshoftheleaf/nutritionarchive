@@ -1,11 +1,9 @@
-import Link from "next/link";
+import Link from "@/components/StaticLink";
 import { notFound } from "next/navigation";
 import {
-  getAllItems,
   getCategories,
   getItemsByCategory,
   getCardItemsByCategory,
-  getItemsByMetric,
   getHighestCalorie,
   getHighestProtein,
   getLowestCalorie,
@@ -17,7 +15,6 @@ import {
 } from "@/lib/data";
 import type { Category } from "@/lib/types";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import FoodCard from "@/components/FoodCard";
 import PaginatedFoodGrid from "@/components/PaginatedFoodGrid";
 import ShareFact from "@/components/ShareFact";
 import JsonLd from "@/components/JsonLd";
@@ -55,6 +52,8 @@ const FORMATTED_MODIFIED_DATE = new Date(SITE_LAST_MODIFIED).toLocaleDateString(
   month: "short",
   day: "numeric",
 });
+
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return [

@@ -1,30 +1,69 @@
 "use client";
 
 import { useMemo, useRef, useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import Fuse from "fuse.js";
 import { Search, X, ArrowRight } from "lucide-react";
-import { CATEGORY_EMOJI } from "@/lib/data";
+import { CATEGORY_EMOJI } from "@/lib/category-meta";
 import type { Category } from "@/lib/types";
 
 type LiteItem = { slug: string; name: string; category: Category };
 
-export default function SearchBar({
-  items,
-  compact = false,
-}: {
-  items: LiteItem[];
-  compact?: boolean;
-}) {
+let searchIndexPromise: Promise<LiteItem[]> | undefined;
+
+function isLiteItem(value: unknown): value is LiteItem {
+  if (typeof value !== "object" || value === null) return false;
+  const item = value as Record<string, unknown>;
+  return (
+    typeof item.slug === "string" &&
+    typeof item.name === "string" &&
+    typeof item.category === "string" &&
+    Object.hasOwn(CATEGORY_EMOJI, item.category)
+  );
+}
+
+function loadSearchIndex(): Promise<LiteItem[]> {
+  searchIndexPromise ??= fetch("/search-index.json")
+    .then(async (response) => {
+      if (!response.ok) {
+        throw new Error(`Search index request failed: ${response.status}`);
+      }
+
+      const data: unknown = await response.json();
+      if (!Array.isArray(data) || !data.every(isLiteItem)) {
+        throw new Error("Search index response has an invalid format");
+      }
+
+      return data;
+    })
+    .catch((error: unknown) => {
+      searchIndexPromise = undefined;
+      throw error;
+    });
+
+  return searchIndexPromise;
+}
+
+export default function SearchBar({ compact = false }: { compact?: boolean }) {
+  const [items, setItems] = useState<LiteItem[]>([]);
+  const [searchIndexError, setSearchIndexError] = useState(false);
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   // Whether the mobile full-screen overlay is active
   const [mobileOpen, setMobileOpen] = useState(false);
-  const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const overlayInputRef = useRef<HTMLInputElement>(null);
+
+  const ensureSearchIndex = useCallback(async () => {
+    setSearchIndexError(false);
+    try {
+      setItems(await loadSearchIndex());
+    } catch (error) {
+      console.error("Unable to load the food search index.", error);
+      setSearchIndexError(true);
+    }
+  }, []);
 
   const fuse = useMemo(
     () =>
@@ -82,10 +121,10 @@ export default function SearchBar({
   }, []);
 
   function goTo(slug: string) {
-    setOpen(false);
-    setMobileOpen(false);
-    setQuery("");
-    router.push(`/nutrition-facts/${slug}`);
+    const links = document.querySelectorAll<HTMLAnchorElement>("[data-search-slug]");
+    Array.from(links)
+      .find((link) => link.dataset.searchSlug === slug)
+      ?.click();
   }
 
   function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -149,9 +188,11 @@ export default function SearchBar({
               if (compact && isTouch) {
                 e.currentTarget.blur();
                 setMobileOpen(true);
+                void ensureSearchIndex();
                 return;
               }
               setOpen(true);
+              void ensureSearchIndex();
             }}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -182,8 +223,9 @@ export default function SearchBar({
           <ul className="absolute left-0 right-0 top-full z-50 mt-2 max-h-96 overflow-auto rounded-2xl border-2 border-hare bg-white p-2 shadow-xl animate-pop">
             {results.map((r, idx) => (
               <li key={r.slug}>
-                <button
-                  onClick={() => goTo(r.slug)}
+                <a
+                  href={`/nutrition-facts/${r.slug}`}
+                  data-search-slug={r.slug}
                   onMouseEnter={() => setActiveIndex(idx)}
                   className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left font-bold text-ink transition-colors ${
                     idx === activeIndex ? "bg-duo-green-light" : "hover:bg-swan"
@@ -195,13 +237,25 @@ export default function SearchBar({
                     Nutrition Facts
                   </span>
                   <ArrowRight className="h-4 w-4 shrink-0 text-wolf sm:hidden" strokeWidth={2.5} />
-                </button>
+                </a>
               </li>
             ))}
           </ul>
         )}
 
-        {open && query.trim() && results.length === 0 && (
+        {open && searchIndexError && (
+          <div className="absolute left-0 right-0 top-full z-50 mt-2 rounded-2xl border-2 border-hare bg-white p-4 text-center font-semibold text-ink-light shadow-xl animate-pop">
+            Food search is temporarily unavailable. Try focusing the search box again.
+          </div>
+        )}
+
+        {open && query.trim() && items.length === 0 && !searchIndexError && (
+          <div className="absolute left-0 right-0 top-full z-50 mt-2 rounded-2xl border-2 border-hare bg-white p-4 text-center font-semibold text-ink-light shadow-xl animate-pop">
+            Loading food search…
+          </div>
+        )}
+
+        {open && items.length > 0 && query.trim() && results.length === 0 && (
           <div className="absolute left-0 right-0 top-full z-50 mt-2 rounded-2xl border-2 border-hare bg-white p-4 text-center font-semibold text-ink-light shadow-xl animate-pop">
             No matches for &ldquo;{query}&rdquo; yet. Try another food!
           </div>
@@ -262,8 +316,9 @@ export default function SearchBar({
                 <ul className="p-3 space-y-1">
                   {results.map((r, idx) => (
                     <li key={r.slug}>
-                      <button
-                        onClick={() => goTo(r.slug)}
+                      <a
+                        href={`/nutrition-facts/${r.slug}`}
+                        data-search-slug={r.slug}
                         onTouchStart={() => setActiveIndex(idx)}
                         className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3.5 text-left font-bold text-ink transition-colors ${
                           idx === activeIndex ? "bg-duo-green-light" : "bg-swan"
@@ -277,10 +332,24 @@ export default function SearchBar({
                           </p>
                         </div>
                         <ArrowRight className="h-5 w-5 shrink-0 text-wolf" strokeWidth={2} />
-                      </button>
+                      </a>
                     </li>
                   ))}
                 </ul>
+              ) : searchIndexError ? (
+                <div className="p-8 text-center">
+                  <p className="font-bold text-ink">Food search is temporarily unavailable.</p>
+                  <button
+                    onClick={() => void ensureSearchIndex()}
+                    className="mt-2 font-bold text-duo-blue hover:underline"
+                  >
+                    Try again
+                  </button>
+                </div>
+              ) : query.trim() && items.length === 0 ? (
+                <div className="p-8 text-center font-semibold text-ink-light">
+                  Loading food search…
+                </div>
               ) : query.trim() ? (
                 <div className="p-8 text-center">
                   <p className="text-4xl mb-3">🔍</p>

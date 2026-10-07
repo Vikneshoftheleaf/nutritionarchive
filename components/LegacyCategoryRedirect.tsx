@@ -1,18 +1,17 @@
 "use client";
 
 import { useEffect, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 function RedirectWatcher() {
   const searchParams = useSearchParams();
-  const router = useRouter();
 
   useEffect(() => {
     const category = searchParams.get("category");
     if (category) {
-      router.replace(`/foods/${category}`);
+      window.location.replace(`/foods/${encodeURIComponent(category)}`);
     }
-  }, [searchParams, router]);
+  }, [searchParams]);
 
   return null;
 }

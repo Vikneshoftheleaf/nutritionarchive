@@ -1,5 +1,5 @@
 import Hero from "@/components/Hero";
-import Link from "next/link";
+import Link from "@/components/StaticLink";
 import CategoryGrid from "@/components/CategoryGrid";
 import PopularFoods from "@/components/PopularFoods";
 import HowItWorks from "@/components/HowItWorks";

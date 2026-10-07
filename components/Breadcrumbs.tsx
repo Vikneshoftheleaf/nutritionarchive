@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/StaticLink";
 import { ChevronRight } from "lucide-react";
 
 export interface Crumb {

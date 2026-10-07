@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/StaticLink";
 import { ArrowRight } from "lucide-react";
 import { getFeaturedItems } from "@/lib/data";
 import FoodCard from "./FoodCard";
