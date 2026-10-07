@@ -9,8 +9,9 @@ dataset (schema supports scaling to 10k+ items with zero code changes).
   browser, "how it works" section, CTA. Full `WebSite` + `Organization` +
   `CollectionPage`/`ItemList` JSON-LD.
 - **Dynamic nutrition pages** (`/nutrition-facts/[slug]`) — one page per food,
-  statically generated at build time (`generateStaticParams`). Includes quick
-  stats, macro ratio chart, full nutrition label table (per 100g + per
+  rendered on demand from the local nutrition dataset to keep Worker builds
+  within Cloudflare's build-storage limits. Includes quick stats, macro ratio
+  chart, full nutrition label table (per 100g + per
   serving), micronutrients with %DV, health benefits, cautions, serving ideas,
   storage tips, FAQ accordion, and related foods. `Article` + `FAQPage` +
   `BreadcrumbList` JSON-LD for rich snippets.
@@ -28,15 +29,12 @@ Everything reads from `data/nutrition.json`, generated from your JSONL via
 the same slugify logic used in the sample. To regenerate with your full
 10k-record file, replace `data/nutrition.json` with the converted output
 (keep the same shape: `{ slug, keyword, ...originalFields }`) and rebuild —
-no other code changes needed. `generateStaticParams` will produce 10k static
-pages automatically.
+no other code changes needed. Nutrition detail pages render on request, so
+adding records does not generate thousands of extra pages during the build.
 
-Two things to watch at 10k scale:
-1. Build time will grow — consider `output: 'export'`-style ISR
-   (`export const dynamic = 'force-static'` is already default) or switching
-   some params to on-demand ISR if builds get too slow.
-2. `sitemap.xml` currently returns everything in one file, comfortably under
-   Google's 50k-URL-per-sitemap limit even at 10k+ items.
+The dataset still needs to be read during builds and requests, so larger files
+will increase build and response work. `sitemap.xml` is a single file and stays
+under Google's 50k-URL-per-sitemap limit at 10k items.
 
 ## Development
 
