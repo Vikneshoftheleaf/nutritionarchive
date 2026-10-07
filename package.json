@@ -8,6 +8,7 @@
     "preview": "npm run build && wrangler pages dev out",
     "lint": "eslint",
     "cf:preview": "npm run preview",
+    "cf:publish": "wrangler pages deploy out --project-name=nutritionarchive",
     "cf:deploy": "npm run build && wrangler pages deploy out --project-name=nutritionarchive"
   },
   "dependencies": {
