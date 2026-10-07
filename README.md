@@ -42,9 +42,9 @@ Two things to watch at 10k scale:
 
 ```bash
 npm install
-npm run dev      # http://localhost:3000
-npm run build    # production build + static generation check
-npm run start    # serve the production build
+npm run dev        # http://localhost:3000
+npm run build:next # build for a standard Node.js Next.js server
+npm run start      # serve the standard Next.js build
 ```
 
 ## Deploy to Cloudflare Workers
@@ -54,13 +54,22 @@ Next.js app and its generated assets; no static-export setting is needed.
 OpenNext warns that Windows builds are not fully supported; use WSL for more
 reliable builds and deployments.
 
-1. Install dependencies with `npm install`.
-2. Authenticate Wrangler with `npx wrangler login`.
-3. Optionally copy `.dev.vars.example` to `.dev.vars` for local Workers
-   preview.
-4. Run `npm run cf:preview` to build and test in the Workers runtime.
-5. Run `npm run cf:deploy` to build and deploy. `npm run cf:upload` uploads a
-   version without activating it.
+For a Git-connected deployment, create a **Workers & Pages > Workers** project
+and connect this repository with the repository root as the project root. Set:
+
+- **Build command:** `npm run build`
+- **Deploy command:** `npx wrangler deploy`
+
+The default build command creates the OpenNext output in `.open-next`, which is
+what `wrangler.jsonc` deploys. Do not use `next build` as the Workers build
+command: it creates `.next` but not the Worker bundle, resulting in
+`Could not find compiled Open Next config`.
+
+For local use, install dependencies with `npm install`, authenticate Wrangler
+with `npx wrangler login`, and optionally copy `.dev.vars.example` to
+`.dev.vars` for Workers preview. Run `npm run cf:preview` to build and test in
+the Workers runtime, `npm run cf:deploy` to build and deploy directly, or
+`npm run cf:upload` to upload a version without activating it.
 
 The Worker name and self-reference binding are set in `wrangler.jsonc`. Update
 the `name` and matching service name there if you want a different Worker name.

@@ -1,7 +1,7 @@
 export const SITE_NAME = "Nutritionarchive";
 export const SITE_TAGLINE = "Nutrition Facts, Made Fun";
 export const SITE_URL = "https://nutritionarchive.com";
-export const SITE_OG_IMAGE = `${SITE_URL}/logo.png`;
+export const SITE_OG_IMAGE = "https://nutritionarchive.com/logo.png";
 export const SITE_OWNER = "Viknesh";
 export const SITE_OWNER_ROLE = "developer, content creator, and nutrition enthusiast";
 export const SITE_DESCRIPTION =
