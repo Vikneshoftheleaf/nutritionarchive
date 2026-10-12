@@ -86,6 +86,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${baloo2.variable} h-full antialiased`} data-scroll-behavior="smooth">
 
       <head>
+        <meta name="google-adsense-account" content="ca-pub-3341904875615636"></meta>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-QCQ882V2MK"
           strategy="afterInteractive"
