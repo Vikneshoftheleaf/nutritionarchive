@@ -74,3 +74,6 @@ with `npx wrangler login` and run `npm run cf:deploy`.
 - Swap `public/favicon.svg` for your real brand mark if desired.
 - Nutrition facts are for general informational purposes; consider adding a
   disclaimer if publishing at scale (a starter one is already in the footer).
+
+
+Added Adsens at Oct 10
