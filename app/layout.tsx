@@ -88,6 +88,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <meta name="google-adsense-account" content="ca-pub-3341904875615636"></meta>
         <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3341904875615636"
+          strategy="beforeInteractive"
+          crossOrigin="anonymous"
+        />
+        <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-QCQ882V2MK"
           strategy="afterInteractive"
         />
