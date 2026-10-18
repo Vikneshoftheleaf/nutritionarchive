@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source not "../data/nutrition.json";
 
 @theme inline {
   --font-sans: var(--font-baloo), ui-rounded, "Segoe UI Rounded", system-ui, sans-serif;

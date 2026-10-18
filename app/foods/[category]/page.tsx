@@ -39,6 +39,8 @@ const CATEGORY_DESCRIPTIONS: Record<Category, string> = {
   candy_or_dessert: "Browse sweets, baked treats, and desserts with transparent calories, sugars, and serving details.",
   condiment_or_sauce: "Compare sauces, dressings, and condiments with nutrition facts for flavor-packed portions.",
   snack_savory: "Find nutrition facts for savory snack foods, from crackers and chips to ready-to-eat bites.",
+  prepared_dish: "Browse ready-to-eat meals, frozen entrees, and restaurant-style dishes with complete nutrition breakdowns.",
+  bakery: "Explore breads, pastries, and baked goods with calorie, carbohydrate, and fiber information for your diet.",
 };
 
 const FORMATTED_PUBLISHED_DATE = new Date(SITE_PUBLISHED).toLocaleDateString("en-US", {

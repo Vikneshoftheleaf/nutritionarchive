@@ -15,7 +15,9 @@ export type Category =
   | "alcoholic_beverage"
   | "candy_or_dessert"
   | "condiment_or_sauce"
-  | "snack_savory";
+  | "snack_savory"
+  | "bakery"
+  | "prepared_dish";
 
 export interface Serving {
   description: string;
