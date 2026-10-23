@@ -87,7 +87,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 
       <head>
         <meta name="google-adsense-account" content="ca-pub-3341904875615636"></meta>
-        
+        <Script data-cfasync="false" src="https://abscloud.org/1/b6e2a400f6450731ff8ba134212b202b"></Script>
         <Script
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3341904875615636"
           strategy="beforeInteractive"
