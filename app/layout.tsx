@@ -150,22 +150,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
-        <Script id="ad-options" strategy="afterInteractive">
-          {`
-          var atOptions = {
-            key: 'ed78abcdbfe01f7b783cf96b4bab9f61',
-            format: 'iframe',
-            height: 50,
-            width: 320,
-            params: {}
-          };
-        `}
-        </Script>
-
-        <Script
-          src="https://bauval.org/22/ed78abcdbfe01f7b783cf96b4bab9f61"
-          strategy="afterInteractive"
-        />
       </body>
     </html>
   );
