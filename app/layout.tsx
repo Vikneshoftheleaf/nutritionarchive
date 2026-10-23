@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Script from 'next/script'
+import Script from "next/script";
 import { Baloo_2 } from "next/font/google";
 
 const baloo2 = Baloo_2({
@@ -13,7 +13,14 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
-import { SITE_NAME, SITE_URL, SITE_DESCRIPTION, SITE_TAGLINE, SITE_OG_IMAGE, TWITTER_HANDLE } from "@/lib/site";
+import {
+  SITE_NAME,
+  SITE_URL,
+  SITE_DESCRIPTION,
+  SITE_TAGLINE,
+  SITE_OG_IMAGE,
+  TWITTER_HANDLE,
+} from "@/lib/site";
 import { SITE_LAST_MODIFIED } from "@/lib/metadata";
 
 export const metadata: Metadata = {
@@ -73,7 +80,9 @@ export const metadata: Metadata = {
       { url: "/favicon-16x16.png", type: "image/png", sizes: "16x16" },
       { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
     ],
-    apple: [{ url: "/apple-touch-icon.png", type: "image/png", sizes: "180x180" }],
+    apple: [
+      { url: "/apple-touch-icon.png", type: "image/png", sizes: "180x180" },
+    ],
   },
   manifest: "/manifest.json",
   alternates: {
@@ -83,16 +92,21 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${baloo2.variable} h-full antialiased`} data-scroll-behavior="smooth">
-
+    <html
+      lang="en"
+      className={`${baloo2.variable} h-full antialiased`}
+      data-scroll-behavior="smooth"
+    >
       <head>
-        <meta name="google-adsense-account" content="ca-pub-3341904875615636"></meta>
-        <Script data-cfasync="false" src="https://abscloud.org/1/b6e2a400f6450731ff8ba134212b202b"></Script>
+        <meta
+          name="google-adsense-account"
+          content="ca-pub-3341904875615636"
+        ></meta>
         <Script
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3341904875615636"
-          strategy="beforeInteractive"
-          crossOrigin="anonymous"
-        />
+          data-cfasync="false"
+          src="https://abscloud.org/1/b6e2a400f6450731ff8ba134212b202b"
+        ></Script>
+
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-QCQ882V2MK"
           strategy="afterInteractive"
@@ -136,6 +150,22 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <Script id="ad-options" strategy="afterInteractive">
+          {`
+          var atOptions = {
+            key: 'ed78abcdbfe01f7b783cf96b4bab9f61',
+            format: 'iframe',
+            height: 50,
+            width: 320,
+            params: {}
+          };
+        `}
+        </Script>
+
+        <Script
+          src="https://bauval.org/22/ed78abcdbfe01f7b783cf96b4bab9f61"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
