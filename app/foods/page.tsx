@@ -18,19 +18,21 @@ import { createPageMetadata, SITE_PUBLISHED, SITE_LAST_MODIFIED } from "@/lib/me
 
 export const metadata = createPageMetadata({
   title: "All Foods — Browse the Full Nutrition Directory",
-  description: `Browse the complete ${SITE_NAME} directory of ${getTotalCount()}+ foods with full nutrition facts, filterable by category.`,
+  description: `Browse the ${SITE_NAME} directory of ${getTotalCount()}+ foods and the nutrition values listed for each entry, filterable by category.`,
   path: "/foods",
   keywords: ["all foods", "food nutrition facts", "nutrition directory", "calories by food", "food database"],
   type: "article",
 });
 
-const FORMATTED_PUBLISHED_DATE = new Date(SITE_PUBLISHED).toLocaleDateString("en-US", {
+const FORMATTED_PUBLISHED_DATE = new Date(`${SITE_PUBLISHED}T00:00:00Z`).toLocaleDateString("en-US", {
+  timeZone: "UTC",
   year: "numeric",
   month: "short",
   day: "numeric",
 });
 
-const FORMATTED_MODIFIED_DATE = new Date(SITE_LAST_MODIFIED).toLocaleDateString("en-US", {
+const FORMATTED_MODIFIED_DATE = new Date(`${SITE_LAST_MODIFIED}T00:00:00Z`).toLocaleDateString("en-US", {
+  timeZone: "UTC",
   year: "numeric",
   month: "short",
   day: "numeric",
@@ -48,7 +50,7 @@ export default function FoodsPage() {
           "@context": "https://schema.org",
           "@type": "CollectionPage",
           name: "All Foods — Nutrition Facts Directory",
-          description: `Complete directory of ${total} foods with full nutrition facts.`,
+          description: `Directory of ${total} foods with the nutrition values listed for each entry.`,
           url: `${SITE_URL}/foods`,
           datePublished: SITE_PUBLISHED,
           dateModified: SITE_LAST_MODIFIED,
@@ -78,14 +80,14 @@ export default function FoodsPage() {
         {/* Published / Modified time meta info */}
         <div className="mt-3 flex flex-wrap items-center gap-3 text-xs font-bold text-ink-light">
           <span className="flex items-center gap-1.5">
-            <span>Published:</span>
+            <span>Site launched:</span>
             <time dateTime={SITE_PUBLISHED} className="font-extrabold text-ink">
               {FORMATTED_PUBLISHED_DATE}
             </time>
           </span>
           <span className="text-hare">•</span>
           <span className="flex items-center gap-1.5">
-            <span>Last updated:</span>
+            <span>Site experience updated:</span>
             <time dateTime={SITE_LAST_MODIFIED} className="font-extrabold text-duo-green-dark">
               {FORMATTED_MODIFIED_DATE}
             </time>

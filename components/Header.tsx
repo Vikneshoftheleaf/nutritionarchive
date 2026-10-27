@@ -44,6 +44,12 @@ export default function Header() {
           >
             All Foods
           </Link>
+          <Link
+            href="/compare"
+            className="rounded-xl px-3 py-2 font-bold text-sm text-ink-light hover:bg-swan hover:text-ink transition-colors"
+          >
+            Compare
+          </Link>
         </nav>
       </div>
     </header>

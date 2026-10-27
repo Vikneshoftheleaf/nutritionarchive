@@ -8,7 +8,15 @@ import FaqAccordion from "@/components/FaqAccordion";
 import JsonLd from "@/components/JsonLd";
 import ShareFact from "@/components/ShareFact";
 import { getFeaturedItems, getTotalCount } from "@/lib/data";
-import { SITE_NAME, SITE_URL, SITE_DESCRIPTION, SITE_TAGLINE, SITE_OWNER, SITE_OWNER_ROLE } from "@/lib/site";
+import {
+  SITE_NAME,
+  SITE_URL,
+  SITE_DESCRIPTION,
+  SITE_TAGLINE,
+  SITE_OWNER,
+  SITE_OWNER_ROLE,
+  NUTRITION_DATASET_URL,
+} from "@/lib/site";
 import { createPageMetadata, SITE_PUBLISHED, SITE_LAST_MODIFIED } from "@/lib/metadata";
 import type { Faq } from "@/lib/types";
 
@@ -36,7 +44,7 @@ const HOME_FAQS: Faq[] = [
 ];
 
 export const metadata = createPageMetadata({
-  title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+  title: SITE_TAGLINE,
   description: SITE_DESCRIPTION,
   path: "/",
   keywords: ["nutrition facts", "food nutrition database", "calories", "macros", "vitamins", "healthy eating"],
@@ -91,6 +99,28 @@ export default function Home() {
       <PopularFoods />
       <CategoryGrid />
       <HowItWorks />
+      <section className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="flex flex-col gap-4 rounded-3xl border-2 border-hare bg-swan p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+          <div>
+            <p className="text-xs font-extrabold uppercase tracking-wide text-duo-blue">
+              Free food tools
+            </p>
+            <h2 className="mt-2 text-2xl font-extrabold text-ink">
+              Compare foods or adjust a portion
+            </h2>
+            <p className="mt-2 max-w-2xl font-medium leading-relaxed text-ink-light">
+              Compare listed values per 100 g, or estimate a portion on any
+              food page using its displayed reference data.
+            </p>
+          </div>
+          <Link
+            href="/compare"
+            className="inline-flex shrink-0 justify-center rounded-xl bg-duo-blue px-5 py-3 font-extrabold text-white shadow-[0_4px_0_0_#1675A9] transition-transform hover:-translate-y-0.5"
+          >
+            Compare foods
+          </Link>
+        </div>
+      </section>
       <section className="mx-auto grid max-w-6xl gap-8 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:items-start">
         <div>
           <p className="text-xs font-extrabold uppercase tracking-wide text-duo-green">About {SITE_NAME}</p>
@@ -98,10 +128,19 @@ export default function Home() {
           <div className="mt-4 space-y-4 font-medium leading-relaxed text-ink-light">
             <p>{SITE_NAME} is an independent, free-to-use nutrition reference created by {SITE_OWNER}, a {SITE_OWNER_ROLE}. It brings food facts into one searchable directory so you can compare calories, macros, vitamins, minerals, and serving context more easily.</p>
             <p>The information is designed for everyday learning and comparison. It is not a substitute for a product label, medical advice, or guidance from a qualified professional.</p>
+            <p>We publish the directory dataset openly and explain its sources and limitations so you can check the context behind the numbers.</p>
           </div>
-          <Link href="/about" className="mt-5 inline-flex rounded-xl bg-duo-green px-5 py-3 font-extrabold text-white shadow-[0_4px_0_0_#46A302] transition-transform hover:-translate-y-0.5">
-            Learn about the archive
-          </Link>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <Link href="/about" className="inline-flex rounded-xl bg-duo-green px-5 py-3 font-extrabold text-white shadow-[0_4px_0_0_#46A302] transition-transform hover:-translate-y-0.5">
+              Learn about the archive
+            </Link>
+            <a href={NUTRITION_DATASET_URL} target="_blank" rel="noreferrer" className="inline-flex rounded-xl border-2 border-hare bg-white px-5 py-3 font-extrabold text-ink hover:border-duo-green">
+              Explore the public dataset
+            </a>
+            <Link href="/methodology" className="inline-flex rounded-xl border-2 border-hare bg-white px-5 py-3 font-extrabold text-ink hover:border-duo-green">
+              Read our methodology
+            </Link>
+          </div>
         </div>
         <div id="faq" className="scroll-mt-24">
           <p className="text-xs font-extrabold uppercase tracking-wide text-duo-blue">Common questions</p>

@@ -49,8 +49,9 @@ export default function ReportDataIssue({ foodName }: { foodName: string }) {
             </div>
           </div>
           <p className="mt-4 max-w-xl font-medium leading-relaxed text-ink-light">
-            Tell us what needs correcting on the {foodName} page. We review every
-            report and update the directory when the data can be verified.
+            Tell us what may need correcting on the {foodName} page. The site
+            owner may assess reports against available evidence; reports are not
+            professional nutrition reviews.
           </p>
           {status === "success" && (
             <div className="mt-5 flex items-start gap-2 rounded-2xl border-2 border-duo-green/30 bg-white p-3 font-bold text-duo-green-dark" role="status">

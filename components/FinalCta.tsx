@@ -25,8 +25,8 @@ export default function FinalCta() {
           {total}+ foods are waiting to be explored
         </h2>
         <p className="mx-auto mt-3 max-w-lg font-semibold text-white/90">
-          No sign-up. No paywall. Just fast, accurate nutrition facts whenever you
-          need them.
+          No sign-up or paywall. Explore nutrition reference data with serving
+          context and links to check the sources.
         </p>
         <Link
           href="/foods"

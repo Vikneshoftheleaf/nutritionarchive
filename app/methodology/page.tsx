@@ -1,12 +1,17 @@
 import InfoPage, { InfoSection, InfoList } from "@/components/InfoPage";
 import JsonLd from "@/components/JsonLd";
 import { createPageMetadata } from "@/lib/metadata";
-import { SITE_NAME, SITE_URL, SITE_OWNER } from "@/lib/site";
+import {
+  SITE_NAME,
+  SITE_URL,
+  SITE_OWNER,
+  NUTRITION_DATASET_URL,
+} from "@/lib/site";
 import { getTotalCount } from "@/lib/data";
 
 export const metadata = createPageMetadata({
   title: "Data Methodology & Sources",
-  description: `Understand how ${SITE_NAME} presents, compares, and reviews nutrition data.`,
+  description: `Understand how ${SITE_NAME} presents nutrition data and handles correction reports.`,
   path: "/methodology",
   keywords: ["nutrition data methodology", "nutrition data sources", "nutrition facts accuracy", "food database methodology"],
 });
@@ -26,7 +31,11 @@ export default function MethodologyPage() {
           isAccessibleForFree: true,
           inLanguage: "en-US",
           variableMeasured: ["Calories", "Protein", "Carbohydrates", "Fiber", "Fat", "Selected micronutrients"],
-          citation: ["https://fdc.nal.usda.gov/", "https://world.openfoodfacts.org/"],
+          citation: [
+            "https://fdc.nal.usda.gov/",
+            "https://world.openfoodfacts.org/",
+            NUTRITION_DATASET_URL,
+          ],
         }}
       />
       <InfoPage
@@ -41,6 +50,9 @@ export default function MethodologyPage() {
       <InfoSection title="Where the data comes from">
         <p>Our food records are compiled from USDA FoodData Central and Open Food Facts, two public nutrition-data resources with different coverage, fields, naming conventions, and update cycles. We use those sources as reference material and organize selected fields into the format used by this site.</p>
         <p>Source records can change over time, and a food may vary by brand, variety, region, growing conditions, fortification, preparation, and storage. A value shown here should not be interpreted as a laboratory result for a specific product.</p>
+        <p>Each food page links to a USDA FoodData Central search for that food&apos;s name to make it easier to explore reference records. The search may return several possible matches, and it does not identify which exact source record was used for the values shown on our page.</p>
+        <p>We maintain a separate source map for record-level checks; it does not alter the published nutrition dataset. A page is labeled with a verified USDA record link only when a specific record has been checked for food identity, preparation state, and relevant nutrition values. Foods without a verified mapping show a search link instead. A matching record still does not independently verify every value on the page.</p>
+        <p>We also publish the 4,000-record dataset used to populate this directory on <a href={NUTRITION_DATASET_URL} target="_blank" rel="noreferrer" className="font-extrabold text-duo-green hover:text-duo-green-dark">Hugging Face</a>. It is a public copy of our site dataset for inspection and reuse, not an independent verification source. The USDA search is provided as a way to explore possible reference records; it does not establish a record-level match to each value shown here.</p>
       </InfoSection>
       <InfoSection title="What each record includes">
         <InfoList>
@@ -50,9 +62,9 @@ export default function MethodologyPage() {
           <li>Related foods selected by category, nutrient overlap, name proximity, and shared usage language.</li>
         </InfoList>
       </InfoSection>
-      <InfoSection title="Sources and review">
+      <InfoSection title="Sources and correction reports">
         <p>The directory is built from structured nutrition records maintained for {SITE_NAME}. The data is not independently laboratory tested by the site owner, and we cannot guarantee that every record is complete, current, correctly matched, or appropriate for a particular product.</p>
-        <p>We review correction requests for plausibility and supporting evidence. A report may lead to a correction, clarification, additional context, or no change when the available evidence is inconclusive.</p>
+        <p>The site owner may assess submitted correction requests for plausibility and supporting evidence. A report may lead to a correction, clarification, additional context, or no change when the available evidence is inconclusive. This report-handling process is not a professional nutrition review, and food records are not routinely audited individually.</p>
       </InfoSection>
       <InfoSection title="Important limitation">
         <p>Nutrition data is an estimate for general education, not a guarantee for a particular product or meal. For medical, allergy, sports-performance, pregnancy, or disease-management decisions, use current professional or product-specific guidance.</p>

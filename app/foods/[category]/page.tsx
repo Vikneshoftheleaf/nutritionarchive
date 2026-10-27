@@ -22,34 +22,36 @@ import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { createPageMetadata, SITE_PUBLISHED, SITE_LAST_MODIFIED } from "@/lib/metadata";
 
 const CATEGORY_DESCRIPTIONS: Record<Category, string> = {
-  fruit: "Explore nature's sweetest foods with complete nutrition facts, natural sugars, dietary fiber, and vitamin profiles.",
-  vegetable: "Discover nutrient-dense leafy greens, cruciferous veggies, root crops, and garden-fresh produce with calories and micronutrients.",
-  grain: "Browse whole grains, cereals, breads, and oats with detailed calorie, carbohydrate, and fiber breakdowns.",
-  meat: "Lean meats, poultry, and animal proteins with accurate calories, protein density, and iron profiles.",
-  seafood: "Rich in omega-3 fatty acids and high-quality protein — examine fish, shellfish, and seafood nutrition.",
-  dairy: "Milks, cheeses, yogurts, and butter with complete calcium, protein, fat, and micronutrient facts.",
-  legume: "Plant-powered lentils, beans, chickpeas, and peas packed with dietary fiber and vital minerals.",
-  beverage: "Hydration options, juices, coffees, and teas with calorie, caffeine, and macronutrient details.",
-  herb_or_spice: "Aromatic herbs and seasonings that add vibrant flavor, antioxidants, and trace minerals to your meals.",
-  nut_or_seed: "Nutrient-packed nuts and seeds brimming with healthy fats, protein, and essential micronutrients.",
-  oil_or_fat: "Cooking oils, fats, and lipids with fatty acid breakdowns and calorie calculations.",
-  egg: "Complete bioavailable protein sources packed with choline, vitamin B12, and essential fats.",
-  other: "Specialty foods and culinary essentials to complete your nutrition tracking.",
-  alcoholic_beverage: "Explore beers, wines, and spirits with clear calorie, carbohydrate, and serving information.",
-  candy_or_dessert: "Browse sweets, baked treats, and desserts with transparent calories, sugars, and serving details.",
-  condiment_or_sauce: "Compare sauces, dressings, and condiments with nutrition facts for flavor-packed portions.",
-  snack_savory: "Find nutrition facts for savory snack foods, from crackers and chips to ready-to-eat bites.",
-  prepared_dish: "Browse ready-to-eat meals, frozen entrees, and restaurant-style dishes with complete nutrition breakdowns.",
-  bakery: "Explore breads, pastries, and baked goods with calorie, carbohydrate, and fiber information for your diet.",
+  fruit: "Browse fruit entries and compare the calories, macronutrients, and other nutrition values listed for each food.",
+  vegetable: "Browse vegetable entries, from leafy greens to root vegetables, and review the nutrition values available for each food.",
+  grain: "Explore grains, cereals, breads, and oats with the nutrition values listed for each entry.",
+  meat: "Browse meat and poultry entries and compare their listed calories, protein, and other nutrition values.",
+  seafood: "Explore fish and shellfish entries with the nutrition values available for each food.",
+  dairy: "Browse milk, cheese, yogurt, and other dairy entries with their listed nutrition values.",
+  legume: "Explore beans, lentils, chickpeas, and peas and review the nutrition values listed for each entry.",
+  beverage: "Browse beverage entries, including juices, coffee, and tea, with their listed nutrition values.",
+  herb_or_spice: "Explore herbs and spices and review the nutrition values available for each entry.",
+  nut_or_seed: "Browse nuts and seeds and compare the nutrition values listed for each food.",
+  oil_or_fat: "Explore oils and fats with the nutrition values available for each entry.",
+  egg: "Browse egg entries and review the nutrition values listed for each food.",
+  other: "Explore additional food entries and the nutrition values available for each one.",
+  alcoholic_beverage: "Browse beer, wine, and spirit entries with their listed nutrition and serving information.",
+  candy_or_dessert: "Explore sweets, baked treats, and desserts with the nutrition values listed for each entry.",
+  condiment_or_sauce: "Browse sauces, dressings, and condiments and review their listed nutrition values.",
+  snack_savory: "Explore savory snack entries, including crackers and chips, with their listed nutrition values.",
+  prepared_dish: "Browse prepared meals and dishes with the nutrition values available for each entry.",
+  bakery: "Explore breads, pastries, and other baked goods with their listed nutrition values.",
 };
 
-const FORMATTED_PUBLISHED_DATE = new Date(SITE_PUBLISHED).toLocaleDateString("en-US", {
+const FORMATTED_PUBLISHED_DATE = new Date(`${SITE_PUBLISHED}T00:00:00Z`).toLocaleDateString("en-US", {
+  timeZone: "UTC",
   year: "numeric",
   month: "short",
   day: "numeric",
 });
 
-const FORMATTED_MODIFIED_DATE = new Date(SITE_LAST_MODIFIED).toLocaleDateString("en-US", {
+const FORMATTED_MODIFIED_DATE = new Date(`${SITE_LAST_MODIFIED}T00:00:00Z`).toLocaleDateString("en-US", {
+  timeZone: "UTC",
   year: "numeric",
   month: "short",
   day: "numeric",
@@ -79,7 +81,7 @@ export async function generateMetadata({
     const count = items.length;
     return createPageMetadata({
       title: `${label} Nutrition Facts (${count} Foods)`,
-      description: `Browse all ${count} ${label.toLowerCase()} with full nutrition facts, calories, protein, carbs, vitamins, and minerals on ${SITE_NAME}.`,
+      description: `Browse ${count} ${label.toLowerCase()} entries and the listed calories, protein, carbohydrates, and other available nutrition values on ${SITE_NAME}.`,
       path: `/foods/${category}`,
       keywords: [
         label.toLowerCase(),
@@ -96,7 +98,7 @@ export async function generateMetadata({
   if (HUB_METRICS.includes(category as HubMetric)) {
     const label = getMetricLabel(category as HubMetric);
     return createPageMetadata({
-      title: `${label} | ${SITE_NAME}`,
+      title: label,
       description: `Browse ${label.toLowerCase()} with nutrition facts, calories, protein, vitamins, and more.`,
       path: `/foods/${category}`,
       keywords: [
@@ -129,7 +131,7 @@ export default async function FoodCategoryPage({
     const emoji = CATEGORY_EMOJI[cat];
     const items = getCardItemsByCategory(cat);
     const total = items.length;
-    const description = CATEGORY_DESCRIPTIONS[cat] ?? `Browse all ${label.toLowerCase()} with complete nutrition facts.`;
+    const description = CATEGORY_DESCRIPTIONS[cat] ?? `Browse listed nutrition values for ${label.toLowerCase()} entries.`;
     const canonicalUrl = `${SITE_URL}/foods/${cat}`;
 
     return (
@@ -203,14 +205,14 @@ export default async function FoodCategoryPage({
           {/* Published / Modified time meta info */}
           <div className="mt-3 flex flex-wrap items-center gap-3 text-xs font-bold text-ink-light">
             <span className="flex items-center gap-1.5">
-              <span>Published:</span>
+              <span>Site launched:</span>
               <time dateTime={SITE_PUBLISHED} className="text-ink font-extrabold">
                 {FORMATTED_PUBLISHED_DATE}
               </time>
             </span>
             <span className="text-hare">•</span>
             <span className="flex items-center gap-1.5">
-              <span>Last updated:</span>
+              <span>Site experience updated:</span>
               <time dateTime={SITE_LAST_MODIFIED} className="text-duo-green-dark font-extrabold">
                 {FORMATTED_MODIFIED_DATE}
               </time>
@@ -222,7 +224,7 @@ export default async function FoodCategoryPage({
             url={canonicalUrl}
             eyebrow={`Share ${label}`}
             heading={`Help someone explore ${label.toLowerCase()}`}
-            description={`Share this curated collection of ${total} ${label.toLowerCase()} with complete calorie and macro profiles.`}
+            description={`Share this collection of ${total} ${label.toLowerCase()} entries and their available nutrition values.`}
           />
 
           {/* Category filter pills */}
@@ -334,14 +336,14 @@ export default async function FoodCategoryPage({
           {/* Published / Modified time meta info */}
           <div className="mt-3 flex flex-wrap items-center gap-3 text-xs font-bold text-ink-light">
             <span className="flex items-center gap-1.5">
-              <span>Published:</span>
+              <span>Site launched:</span>
               <time dateTime={SITE_PUBLISHED} className="text-ink font-extrabold">
                 {FORMATTED_PUBLISHED_DATE}
               </time>
             </span>
             <span className="text-hare">•</span>
             <span className="flex items-center gap-1.5">
-              <span>Last updated:</span>
+              <span>Site experience updated:</span>
               <time dateTime={SITE_LAST_MODIFIED} className="text-duo-green-dark font-extrabold">
                 {FORMATTED_MODIFIED_DATE}
               </time>

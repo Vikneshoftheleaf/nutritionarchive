@@ -1,7 +1,6 @@
 import Link from "@/components/StaticLink";
-import { Apple } from "lucide-react";
 import { getCategories, CATEGORY_LABELS, CATEGORY_EMOJI, getTotalCount } from "@/lib/data";
-import { SITE_NAME } from "@/lib/site";
+import { NUTRITION_DATASET_URL, SITE_NAME } from "@/lib/site";
 import Image from "next/image";
 export default function Footer() {
   const categories = getCategories();
@@ -46,6 +45,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/compare" className="text-sm font-semibold text-ink-light hover:text-duo-green">
+                  Compare foods
+                </Link>
+              </li>
+              <li>
                 <Link href="/#popular" className="text-sm font-semibold text-ink-light hover:text-duo-green">
                   Popular Foods
                 </Link>
@@ -70,6 +74,16 @@ export default function Footer() {
                 <Link href="/methodology" className="text-sm font-semibold text-ink-light hover:text-duo-green">
                   Methodology &amp; sources
                 </Link>
+              </li>
+              <li>
+                <a href={NUTRITION_DATASET_URL} target="_blank" rel="noreferrer" className="text-sm font-semibold text-ink-light hover:text-duo-green">
+                  Public nutrition dataset
+                </a>
+              </li>
+              <li>
+                <a href="https://fdc.nal.usda.gov/" target="_blank" rel="noreferrer" className="text-sm font-semibold text-ink-light hover:text-duo-green">
+                  USDA FoodData Central
+                </a>
               </li>
               <li>
                 <Link href="/corrections" className="text-sm font-semibold text-ink-light hover:text-duo-green">

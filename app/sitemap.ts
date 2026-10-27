@@ -3,21 +3,7 @@ import { getAllItems, getCategories, HUB_METRICS } from "@/lib/data";
 import { SITE_URL } from "@/lib/site";
 import { SITE_LAST_MODIFIED } from "@/lib/metadata";
 export const dynamic = "force-static";
-const PAGE_SIZE = 60;
 const LAST_MODIFIED = new Date(`${SITE_LAST_MODIFIED}T00:00:00.000Z`);
-
-function foodsUrl(params?: Record<string, string | number>): string {
-  if (!params) return `${SITE_URL}/foods`;
-  const searchParams = new URLSearchParams(
-    Object.entries(params).map(([key, value]) => [key, String(value)])
-  );
-  // Next serializes the URL and escapes query separators for the sitemap XML.
-  return `${SITE_URL}/foods?${searchParams.toString()}`;
-}
-
-function pageCount(count: number): number {
-  return Math.max(1, Math.ceil(count / PAGE_SIZE));
-}
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const items = getAllItems();
@@ -31,10 +17,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: foodsUrl(),
+      url: `${SITE_URL}/foods`,
       lastModified: LAST_MODIFIED,
       changeFrequency: "weekly",
       priority: 0.9,
+    },
+    {
+      url: `${SITE_URL}/compare`,
+      lastModified: LAST_MODIFIED,
+      changeFrequency: "monthly",
+      priority: 0.7,
     },
   ];
 
@@ -60,24 +52,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  const paginatedRoutes: MetadataRoute.Sitemap = [
-    ...Array.from({ length: pageCount(items.length) - 1 }, (_, index) => ({
-      url: foodsUrl({ page: index + 2 }),
-      lastModified: LAST_MODIFIED,
-      changeFrequency: "weekly" as const,
-      priority: 0.7,
-    })),
-    ...categories.flatMap((category) => {
-      const categoryItems = items.filter((item) => item.category === category);
-      return Array.from({ length: pageCount(categoryItems.length) - 1 }, (_, index) => ({
-        url: `${SITE_URL}/foods/${category}?page=${index + 2}`,
-        lastModified: LAST_MODIFIED,
-        changeFrequency: "weekly" as const,
-        priority: 0.7,
-      }));
-    }),
-  ];
-
   const hubRoutes: MetadataRoute.Sitemap = HUB_METRICS.map((metric) => ({
     url: `${SITE_URL}/foods/${metric}`,
     lastModified: LAST_MODIFIED,
@@ -92,5 +66,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 1,
   }));
 
-  return [...staticRoutes, ...categoryRoutes, ...trustRoutes, ...paginatedRoutes, ...hubRoutes, ...itemRoutes];
+  return [...staticRoutes, ...categoryRoutes, ...trustRoutes, ...hubRoutes, ...itemRoutes];
 }

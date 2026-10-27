@@ -59,14 +59,14 @@ export default function InfoPage({
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-3 text-xs font-bold text-ink-light">
             <span className="flex items-center gap-1.5">
-              <span>Published:</span>
+              <span>Site launched:</span>
               <time dateTime={SITE_PUBLISHED} className="font-extrabold text-ink">
                 {publishedFormatted}
               </time>
             </span>
             <span className="text-hare">•</span>
             <span className="flex items-center gap-1.5">
-              <span>Last reviewed / updated:</span>
+              <span>Site experience updated:</span>
               <time dateTime={SITE_LAST_MODIFIED} className="font-extrabold text-duo-green-dark">
                 {modifiedFormatted}
               </time>

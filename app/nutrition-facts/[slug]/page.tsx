@@ -5,26 +5,31 @@ import {
   getAllSlugs,
   getItemBySlug,
   getRelatedItemGroups,
+  getTotalCount,
   CATEGORY_LABELS,
   CATEGORY_EMOJI,
 } from "@/lib/data";
-import { SITE_NAME, SITE_URL, SITE_OG_IMAGE, SITE_OWNER } from "@/lib/site";
+import {
+  SITE_NAME,
+  SITE_URL,
+  SITE_OG_IMAGE,
+  SITE_OWNER,
+  NUTRITION_DATASET_URL,
+} from "@/lib/site";
 import {
   createPageMetadata,
-  SITE_LAST_MODIFIED,
-  SITE_PUBLISHED,
 } from "@/lib/metadata";
+import { getVerifiedUsdaSource } from "@/lib/usda-sources";
 
 import JsonLd from "@/components/JsonLd";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import QuickStats from "@/components/QuickStats";
 import MacroRatio from "@/components/MacroRatio";
 import NutritionTable from "@/components/NutritionTable";
+import ServingSizeCalculator from "@/components/ServingSizeCalculator";
 import MicronutrientGrid from "@/components/MicronutrientGrid";
 import GlycemicBadge from "@/components/GlycemicBadge";
 import {
-  BenefitsList,
-  CautionList,
   ServingIdeas,
   StorageTip,
 } from "@/components/BenefitsAndCautions";
@@ -64,7 +69,6 @@ export async function generateMetadata({
       "nutrition facts",
     ],
     type: "article",
-    publishedTime: SITE_PUBLISHED,
   });
 }
 
@@ -88,6 +92,9 @@ export default async function NutritionFactPage({
   );
   const url = `${SITE_URL}/nutrition-facts/${item.slug}`;
   const categoryLabel = CATEGORY_LABELS[item.category];
+  const verifiedUsdaSource = getVerifiedUsdaSource(item.slug);
+  const usdaSearchUrl = new URL("https://fdc.nal.usda.gov/food-search/");
+  usdaSearchUrl.searchParams.set("query", item.name);
 
   return (
     <>
@@ -119,14 +126,12 @@ export default async function NutritionFactPage({
           headline: `${item.name} Nutrition Facts`,
           description: item.meta_description,
           image: [SITE_OG_IMAGE],
-          datePublished: SITE_PUBLISHED,
-          dateModified: SITE_LAST_MODIFIED,
           url,
           mainEntityOfPage: url,
           author: {
             "@type": "Person",
             name: SITE_OWNER,
-            jobTitle: "Developer, content creator, and nutrition enthusiast",
+            jobTitle: "Developer and content creator",
             url: `${SITE_URL}/about`,
           },
           publisher: {
@@ -215,30 +220,36 @@ export default async function NutritionFactPage({
             <span className="rounded-full bg-swan px-3.5 py-1.5 text-xs font-extrabold text-ink-light">
               Serving: {item.serving.description} ({item.serving.grams}g)
             </span>
-            <span className="flex items-center gap-1.5 rounded-full bg-swan px-3.5 py-1.5 text-xs font-bold text-ink-light">
-              <span>Published:</span>
-              <time
-                dateTime={SITE_PUBLISHED}
-                className="font-extrabold text-ink"
+            {verifiedUsdaSource ? (
+              <a
+                href={verifiedUsdaSource.sourceUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`View the verified USDA FoodData Central record for ${item.name}`}
+                className="rounded-full border-2 border-duo-blue/40 bg-duo-blue-light px-3.5 py-1.5 text-xs font-extrabold text-duo-blue-dark hover:border-duo-blue"
               >
-                {new Intl.DateTimeFormat("en", {
-                  dateStyle: "medium",
-                  timeZone: "UTC",
-                }).format(new Date(`${SITE_PUBLISHED}T00:00:00Z`))}
-              </time>
-            </span>
-            <span className="flex items-center gap-1.5 rounded-full bg-swan px-3.5 py-1.5 text-xs font-bold text-ink-light">
-              <span>Updated:</span>
-              <time
-                dateTime={SITE_LAST_MODIFIED}
-                className="font-extrabold text-duo-green-dark"
+                Verified USDA record
+              </a>
+            ) : (
+              <a
+                href={usdaSearchUrl.toString()}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`Search USDA FoodData Central for possible matches for ${item.name}; no exact source record is verified`}
+                className="rounded-full border-2 border-duo-blue/40 bg-duo-blue-light px-3.5 py-1.5 text-xs font-extrabold text-duo-blue-dark hover:border-duo-blue"
               >
-                {new Intl.DateTimeFormat("en", {
-                  dateStyle: "medium",
-                  timeZone: "UTC",
-                }).format(new Date(`${SITE_LAST_MODIFIED}T00:00:00Z`))}
-              </time>
-            </span>
+                Search USDA matches
+              </a>
+            )}
+            <a
+              href={NUTRITION_DATASET_URL}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`View the public Nutritionarchive dataset containing ${item.name}`}
+              className="rounded-full border-2 border-duo-green/40 bg-duo-green-light px-3.5 py-1.5 text-xs font-extrabold text-duo-green-dark hover:border-duo-green"
+            >
+              Public dataset · {getTotalCount().toLocaleString()} foods
+            </a>
           </div>
         </header>
 
@@ -262,31 +273,23 @@ export default async function NutritionFactPage({
           <NutritionTable per100g={item.per_100g} serving={item.serving} />
         </section>
 
+        <section className="mt-10">
+          <h2 className="mb-4 text-2xl font-extrabold text-ink">
+            Adjust the serving size
+          </h2>
+          <ServingSizeCalculator
+            foodName={item.name}
+            per100g={item.per_100g}
+            serving={item.serving}
+          />
+        </section>
+
         {/* Micronutrients */}
         <section className="mt-10">
           <h2 className="mb-4 text-2xl font-extrabold text-ink">
             Key vitamins &amp; minerals
           </h2>
           <MicronutrientGrid items={item.key_micronutrients} />
-        </section>
-
-        {/* Health benefits */}
-        <section className="mt-10">
-          <h2 className="mb-4 text-2xl font-extrabold text-ink">
-            Health benefits of {item.name.toLowerCase()}
-          </h2>
-          <BenefitsList
-            benefits={item.health_benefits}
-            relatedItems={contextualItems}
-          />
-        </section>
-
-        {/* Things to consider */}
-        <section className="mt-10">
-          <h2 className="mb-4 text-2xl font-extrabold text-ink">
-            Things to consider
-          </h2>
-          <CautionList points={item.things_to_consider} />
         </section>
 
         {/* Serving ideas + storage */}
@@ -311,26 +314,31 @@ export default async function NutritionFactPage({
           aria-label="Data trust information"
         >
           <div>
-            <p className="font-extrabold text-ink">Editorial review</p>
+            <p className="font-extrabold text-ink">Record status</p>
             <p className="mt-1 font-medium leading-relaxed text-ink-light">
-              Presented and reviewed by {SITE_OWNER} on{" "}
-              <time
-                dateTime={SITE_LAST_MODIFIED}
-                className="font-bold text-ink"
-              >
-                {new Intl.DateTimeFormat("en", {
-                  dateStyle: "medium",
-                  timeZone: "UTC",
-                }).format(new Date(`${SITE_LAST_MODIFIED}T00:00:00Z`))}
-              </time>
-              .
+              This page presents a record from our public dataset. It has not
+              been independently verified by a nutrition professional.
             </p>
           </div>
           <div>
-            <p className="font-extrabold text-ink">Data context</p>
+            <p className="font-extrabold text-ink">Source context</p>
             <p className="mt-1 font-medium leading-relaxed text-ink-light">
-              Records are compiled and normalized from public nutrition sources.
-              Read the{" "}
+              {verifiedUsdaSource ? (
+                <>
+                  This record was matched to USDA {verifiedUsdaSource.dataType}:{" "}
+                  {verifiedUsdaSource.description}. Preparation checked:{" "}
+                  {verifiedUsdaSource.preparationMatch}; match checked on{" "}
+                  {verifiedUsdaSource.checkedOn}. This link does not independently
+                  verify every value displayed here.
+                </>
+              ) : (
+                <>
+                  No exact USDA record match has been verified for this food.
+                  Search results may include candidates that do not match the
+                  exact record or values shown.{" "}
+                </>
+              )}
+              Read our{" "}
               <Link
                 href="/methodology"
                 className="font-extrabold text-duo-green hover:text-duo-green-dark"

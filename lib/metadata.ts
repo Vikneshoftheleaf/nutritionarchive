@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { SITE_NAME, SITE_URL, SITE_OG_IMAGE, TWITTER_HANDLE } from "./site";
 
-export const SITE_LAST_MODIFIED = "2026-10-18";
+export const SITE_LAST_MODIFIED = "2026-10-27";
 export const SITE_PUBLISHED = "2026-09-24";
 
 const DEFAULT_TITLE = `${SITE_NAME} — Nutrition Facts`;
@@ -14,8 +14,8 @@ export function createPageMetadata({
   path,
   keywords,
   type = "website",
-  publishedTime = SITE_PUBLISHED,
-  modifiedTime = SITE_LAST_MODIFIED,
+  publishedTime,
+  modifiedTime,
 }: {
   title?: string | null;
   description?: string | null;
@@ -30,8 +30,8 @@ export function createPageMetadata({
   const safePath = path?.trim() || "/";
   const safeKeywords = keywords?.filter((keyword) => keyword?.trim()) ?? [];
   const url = `${SITE_URL}${safePath}`;
-  const safePublishedTime = publishedTime?.trim() || SITE_PUBLISHED;
-  const safeModifiedTime = modifiedTime?.trim() || SITE_LAST_MODIFIED;
+  const safePublishedTime = publishedTime?.trim();
+  const safeModifiedTime = modifiedTime?.trim();
 
   const openGraph: NonNullable<Metadata["openGraph"]> = {
     title: safeTitle,
@@ -41,8 +41,8 @@ export function createPageMetadata({
     locale: "en_US",
     type,
     images: [{ url: SITE_OG_IMAGE, alt: `${SITE_NAME} logo` }],
-    modifiedTime: safeModifiedTime,
-    publishedTime: safePublishedTime,
+    ...(safeModifiedTime ? { modifiedTime: safeModifiedTime } : {}),
+    ...(safePublishedTime ? { publishedTime: safePublishedTime } : {}),
   };
 
   return {
@@ -63,11 +63,19 @@ export function createPageMetadata({
       images: [SITE_OG_IMAGE],
     },
     other: {
-      "last-modified": safeModifiedTime,
-      "article:published_time": safePublishedTime,
-      "article:modified_time": safeModifiedTime,
-      "publish-date": safePublishedTime,
-      "og:updated_time": safeModifiedTime,
+      ...(safeModifiedTime
+        ? {
+            "last-modified": safeModifiedTime,
+            "article:modified_time": safeModifiedTime,
+            "og:updated_time": safeModifiedTime,
+          }
+        : {}),
+      ...(safePublishedTime
+        ? {
+            "article:published_time": safePublishedTime,
+            "publish-date": safePublishedTime,
+          }
+        : {}),
     },
   };
 }

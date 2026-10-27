@@ -1,0 +1,12 @@
+{
+  "verified": {},
+  "checkedCandidates": {
+    "broccoli": {
+      "fdcId": 170379,
+      "dataType": "SR Legacy",
+      "description": "Broccoli, raw",
+      "checkedOn": "2026-10-27",
+      "notes": "The preparation state and several values match, including calories, protein, carbohydrate, fiber, sugars, water, sodium, vitamin C, vitamin K, calcium, and potassium. USDA saturated fat is 0.114 g per 100 g, while the site record lists 0.04 g. This candidate is not marked as a verified match. The USDA detail-page URL was also unavailable (404) when checked."
+    }
+  }
+}

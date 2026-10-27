@@ -25,7 +25,7 @@ export default function CorrectionsPage() {
         </InfoList>
       </InfoSection>
       <InfoSection title="What happens next">
-        <p>Reports are sent through FormSubmit to the site owner&apos;s review inbox. We check the claim against available source data and other available evidence, then update or clarify the record when appropriate. We may contact you if you include an email address, but we cannot promise a response, a correction, or a particular review time.</p>
+        <p>Reports are sent through FormSubmit to the site owner&apos;s inbox and may be assessed against available source data and other evidence. The site owner is not a nutrition professional, so this is not a professional nutrition review. A report may lead to a correction or clarification when evidence supports a change. We may contact you if you include an email address, but we cannot promise a response, a correction, or a particular review time.</p>
       </InfoSection>
       <InfoSection title="What we can and cannot verify">
         <p>Some differences are legitimate: foods vary by brand, cultivar, preparation state, serving size, region, and database source. A report is not automatically proof that a value is wrong. We may retain a value, add a qualification, or decline to change it when reliable evidence is unavailable.</p>

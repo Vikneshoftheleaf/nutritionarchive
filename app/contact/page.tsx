@@ -4,7 +4,7 @@ import { createPageMetadata } from "@/lib/metadata";
 import { SITE_NAME } from "@/lib/site";
 
 export const metadata = createPageMetadata({
-  title: `Contact ${SITE_NAME}`,
+  title: "Contact",
   description: `Contact the creator of ${SITE_NAME} with questions, feedback, or partnership ideas.`,
   path: "/contact",
   keywords: [`contact ${SITE_NAME}`, "nutrition website contact", "food database feedback", "nutrition facts feedback"],

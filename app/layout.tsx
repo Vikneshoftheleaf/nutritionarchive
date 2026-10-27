@@ -21,7 +21,6 @@ import {
   SITE_OG_IMAGE,
   TWITTER_HANDLE,
 } from "@/lib/site";
-import { SITE_LAST_MODIFIED } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -58,9 +57,6 @@ export const metadata: Metadata = {
     creator: TWITTER_HANDLE,
     site: TWITTER_HANDLE,
     images: [SITE_OG_IMAGE],
-  },
-  other: {
-    "last-modified": SITE_LAST_MODIFIED,
   },
   robots: {
     index: true,
@@ -102,10 +98,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           name="google-adsense-account"
           content="ca-pub-3341904875615636"
         ></meta>
-        <Script
-          data-cfasync="false"
-          src="https://abscloud.org/1/b6e2a400f6450731ff8ba134212b202b"
-        ></Script>
 
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-QCQ882V2MK"

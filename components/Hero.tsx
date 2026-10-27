@@ -44,8 +44,8 @@ export default function Hero() {
         </h1>
 
         <p className="mx-auto mt-5 max-w-xl text-base font-semibold text-ink-light sm:text-lg">
-          Calories, macros, vitamins, and real health benefits for {total}+ fruits,
-          vegetables, grains &amp; more — no fluff, just facts.
+          Explore calories, macros, vitamins, and serving context for {total}+
+          foods, with links to public data sources.
         </p>
 
         <div className="mt-8">
@@ -62,8 +62,6 @@ export default function Hero() {
           <Stat value={`${categoryCount}`} label="Categories" />
           <Divider />
           <Stat value="100%" label="Free" />
-          <Divider />
-          <Stat value="0" label="Ads on facts" />
         </div>
       </div>
     </section>
